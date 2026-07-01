@@ -6,13 +6,15 @@
 
 /* ----------------- < 1024px: tablero apilado ----------------- */
 @media (max-width: 1023px) {
+  /* minmax(0,1fr): evita que el contenido (chips, tabla) infle
+     el ancho mínimo de la columna y provoque overflow horizontal. */
   .tablero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .lateral {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
   }
 
@@ -23,6 +25,11 @@
 
   .kpi-hero {
     grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .kpi-ancho {
+    grid-column: auto;
     grid-row: auto;
   }
 
@@ -46,6 +53,10 @@
   .marca-sub,
   .usuario-email {
     display: none;
+  }
+
+  .cabecera-acciones {
+    gap: var(--esp-2);
   }
 
   .indicador-vivo {
@@ -149,6 +160,13 @@
 @media (min-width: 768px) {
   .lista-citas {
     display: none !important;
+  }
+}
+
+/* ---------- <= 480px: header compacto (solo el punto) -------- */
+@media (max-width: 480px) {
+  #indicador-texto {
+    display: none;
   }
 }
 

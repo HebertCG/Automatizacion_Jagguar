@@ -202,10 +202,29 @@
 }
 
 .kpi-ingresos {
+  grid-column: 4;
   grid-row: 1 / 3;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+/* Completadas: tarjeta ancha y baja → bento sin celdas vacías */
+.kpi-ancho {
+  grid-column: 2 / 4;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--esp-4);
+}
+
+.kpi-ancho .kpi-titulo {
+  margin-top: 0;
+}
+
+.kpi-ancho .kpi-valor {
+  margin-top: 0;
+  margin-left: auto;
 }
 
 .kpi-icono {
@@ -268,6 +287,12 @@
   grid-template-columns: minmax(0, 1fr) 360px;
   gap: var(--esp-4);
   align-items: start;
+}
+
+/* Los hijos de las grillas nunca inflan su columna (anti-overflow) */
+.tablero > *,
+.lateral > * {
+  min-width: 0;
 }
 
 .panel {
@@ -365,6 +390,7 @@
   font-family: var(--fuente-titulo);
   font-weight: 700;
   font-size: var(--texto-sm);
+  white-space: nowrap;
 }
 
 .bahia-etiqueta {
