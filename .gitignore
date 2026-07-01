@@ -1,0 +1,14 @@
+# Secretos y entorno — NUNCA se versionan
+.env
+.env.*
+*.pem
+*.key
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs y temporales
+*.log
+tmp/

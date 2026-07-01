@@ -1,0 +1,89 @@
+/* ============================================================
+   Jaguar Carwash — Design tokens
+   Estilo: futurista en claro, "glassmorphism de laboratorio limpio"
+   ============================================================ */
+
+:root {
+  /* --- Paleta base --------------------------------------- */
+  --fondo: #F5F8FC;             /* blanco hielo con tinte azul */
+  --tinta: #0E1B2C;             /* texto principal */
+  --tinta-suave: #46586E;       /* texto secundario */
+  --tinta-tenue: #7C8DA1;       /* texto terciario / labels */
+
+  --superficie: rgba(255, 255, 255, 0.72);
+  --superficie-alta: rgba(255, 255, 255, 0.88);
+  --superficie-solida: #FFFFFF;
+  --borde: rgba(14, 27, 44, 0.08);
+  --borde-fuerte: rgba(14, 27, 44, 0.16);
+
+  /* --- Acentos -------------------------------------------- */
+  --cian: #00B4D8;              /* acento primario */
+  --azul: #0077B6;
+  --lima: #B8F135;              /* SOLO listo / éxito */
+  --lima-oscuro: #5A7A00;       /* texto sobre fondos lima */
+  --ambar: #E8960C;             /* pendiente */
+  --coral: #F45B69;             /* cancelar / error */
+  --verde: #19A97B;             /* completada */
+  --gris-estado: #8A99AB;       /* no_show */
+
+  --grad-primario: linear-gradient(135deg, var(--cian), var(--azul));
+  --grad-suave: linear-gradient(135deg, rgba(0, 180, 216, 0.12), rgba(0, 119, 182, 0.06));
+
+  /* --- Tintes por estado (fondos de badges) ---------------- */
+  --tinte-pendiente: rgba(232, 150, 12, 0.14);
+  --tinte-confirmada: rgba(0, 180, 216, 0.14);
+  --tinte-proceso: rgba(0, 119, 182, 0.14);
+  --tinte-listo: rgba(184, 241, 53, 0.30);
+  --tinte-completada: rgba(25, 169, 123, 0.14);
+  --tinte-cancelada: rgba(244, 91, 105, 0.13);
+  --tinte-noshow: rgba(138, 153, 171, 0.16);
+
+  /* --- Sombras y brillos ----------------------------------- */
+  --sombra-1: 0 1px 2px rgba(14, 27, 44, 0.05), 0 10px 28px -14px rgba(14, 27, 44, 0.14);
+  --sombra-2: 0 2px 6px rgba(14, 27, 44, 0.06), 0 18px 44px -16px rgba(14, 27, 44, 0.20);
+  --glow-cian: 0 0 0 1px rgba(0, 180, 216, 0.30), 0 8px 28px -6px rgba(0, 180, 216, 0.45);
+  --glow-cian-fuerte: 0 0 0 1px rgba(0, 180, 216, 0.45), 0 10px 34px -4px rgba(0, 180, 216, 0.60);
+  --glow-lima: 0 0 0 1px rgba(184, 241, 53, 0.55), 0 8px 26px -6px rgba(150, 210, 20, 0.55);
+
+  /* --- Esquinas asimétricas (grande arriba-izq / abajo-der) - */
+  --radio-asim: 26px 10px 26px 10px;
+  --radio-asim-sm: 16px 6px 16px 6px;
+  --radio: 12px;
+  --radio-pill: 999px;
+
+  /* --- Tipografía ------------------------------------------ */
+  --fuente-titulo: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+  --fuente-texto: 'Inter', 'Segoe UI', system-ui, sans-serif;
+
+  --texto-xs: 0.75rem;
+  --texto-sm: 0.85rem;
+  --texto-base: clamp(0.92rem, 0.88rem + 0.2vw, 1rem);
+  --texto-lg: 1.15rem;
+  --texto-kpi: clamp(2rem, 1.4rem + 1.6vw, 3rem);
+  --texto-kpi-hero: clamp(3rem, 2rem + 3.4vw, 5rem);
+
+  /* --- Movimiento ------------------------------------------ */
+  --dur-rapida: 150ms;
+  --dur-normal: 300ms;
+  --dur-lenta: 600ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-suave: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* --- Espaciado ------------------------------------------- */
+  --esp-1: 0.25rem;
+  --esp-2: 0.5rem;
+  --esp-3: 0.75rem;
+  --esp-4: 1rem;
+  --esp-5: 1.5rem;
+  --esp-6: 2rem;
+  --esp-seccion: clamp(1rem, 0.6rem + 1.4vw, 1.75rem);
+}
+
+/* Con movimiento reducido, todo lo animado se vuelve inmediato */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-rapida: 1ms;
+    --dur-normal: 1ms;
+    --dur-lenta: 1ms;
+  }
+}

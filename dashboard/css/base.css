@@ -1,0 +1,248 @@
+/* ============================================================
+   Jaguar Carwash — Base: reset, fondo, tipografía, keyframes
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-base);
+  line-height: 1.5;
+  color: var(--tinta);
+  background-color: var(--fondo);
+  overflow-x: clip; /* nunca scroll horizontal accidental */
+  -webkit-font-smoothing: antialiased;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+img,
+canvas,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+.svg-defs {
+  position: absolute;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fuente-titulo);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+input {
+  font: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: rgba(0, 180, 216, 0.25);
+}
+
+:focus-visible {
+  outline: 2px solid var(--cian);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.aviso-noscript {
+  padding: var(--esp-5);
+  text-align: center;
+  font-weight: 600;
+}
+
+/* --- Fondo tipo blueprint: malla tenue + halo luminoso ------- */
+.fondo-malla {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(ellipse 80% 55% at 50% -10%, rgba(0, 180, 216, 0.10), transparent 60%),
+    radial-gradient(ellipse 45% 40% at 95% 100%, rgba(184, 241, 53, 0.07), transparent 65%),
+    linear-gradient(rgba(0, 119, 182, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 119, 182, 0.045) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 44px 44px, 44px 44px;
+}
+
+/* --- Superficie de vidrio ------------------------------------ */
+.vidrio {
+  background: var(--superficie);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--sombra-1);
+}
+
+/* Borde con degradado sutil (técnica de máscara) */
+.borde-degradado {
+  position: relative;
+  border-radius: var(--radio-asim);
+}
+
+.borde-degradado::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 180, 216, 0.45),
+    rgba(14, 27, 44, 0.06) 38%,
+    rgba(14, 27, 44, 0.06) 62%,
+    rgba(0, 119, 182, 0.30)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* --- Keyframes ------------------------------------------------ */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes escaneo {
+  0% {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.55;
+  }
+  88% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateY(140px);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes flashFila {
+  0% {
+    background-color: rgba(0, 180, 216, 0.22);
+  }
+  60% {
+    background-color: rgba(0, 180, 216, 0.10);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes pulsoVivo {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.55;
+  }
+}
+
+@keyframes brilloListo {
+  0%,
+  100% {
+    box-shadow: var(--glow-cian);
+  }
+  50% {
+    box-shadow: var(--glow-cian-fuerte);
+  }
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Entrada escalonada: se aplica con --orden desde el HTML/JS */
+.anim-entrada {
+  animation: fadeUp var(--dur-lenta) var(--ease-out) both;
+  animation-delay: calc(var(--orden, 0) * 70ms);
+}
+
+/* --- Movimiento reducido: apagar todo lo decorativo ----------- */
+@media (prefers-reduced-motion: reduce) {
+  .anim-entrada {
+    animation: none;
+  }
+
+  .con-escaneo::after {
+    display: none !important;
+  }
+
+  .punto-vivo,
+  .btn-listo {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

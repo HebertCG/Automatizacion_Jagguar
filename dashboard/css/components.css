@@ -1,0 +1,469 @@
+/* ============================================================
+   Jaguar Carwash — Componentes: botones, chips, tabla, badges,
+   tarjetas móviles, toasts, modal, skeleton
+   ============================================================ */
+
+/* ------------------------ BOTONES --------------------------- */
+.btn-primario {
+  width: 100%;
+  padding: 0.75rem 1.2rem;
+  border-radius: var(--radio-asim-sm);
+  background: var(--grad-primario);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform var(--dur-rapida) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out), opacity var(--dur-rapida);
+}
+
+.btn-primario:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--glow-cian);
+}
+
+.btn-primario:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.btn-primario.cargando::after {
+  content: '';
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-left: 0.5em;
+  vertical-align: -0.12em;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: girar 0.7s linear infinite;
+}
+
+.btn-fantasma {
+  padding: 0.42rem 0.95rem;
+  border-radius: var(--radio-pill);
+  border: 1px solid var(--borde-fuerte);
+  background: var(--superficie-alta);
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  color: var(--tinta-suave);
+  transition: border-color var(--dur-rapida), color var(--dur-rapida), transform var(--dur-rapida) var(--ease-out);
+}
+
+.btn-fantasma:hover {
+  border-color: var(--cian);
+  color: var(--azul);
+  transform: translateY(-1px);
+}
+
+.btn-peligro {
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radio-asim-sm);
+  background: var(--coral);
+  color: #fff;
+  font-weight: 600;
+  transition: transform var(--dur-rapida) var(--ease-out), filter var(--dur-rapida);
+}
+
+.btn-peligro:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+/* Acciones por fila */
+.acciones-fila {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.btn-accion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.32rem 0.7rem;
+  border-radius: var(--radio-pill);
+  border: 1px solid var(--borde-fuerte);
+  background: var(--superficie-solida);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: transform var(--dur-rapida) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out), border-color var(--dur-rapida);
+}
+
+.btn-accion:hover {
+  transform: translateY(-1px);
+  border-color: var(--cian);
+  box-shadow: 0 4px 14px -6px rgba(0, 119, 182, 0.4);
+}
+
+.btn-accion:active {
+  transform: translateY(0);
+}
+
+.btn-confirmar {
+  color: var(--azul);
+}
+
+.btn-iniciar {
+  color: var(--azul);
+  border-color: rgba(0, 119, 182, 0.35);
+}
+
+.btn-cancelar {
+  color: var(--coral);
+}
+
+.btn-cancelar:hover {
+  border-color: var(--coral);
+  box-shadow: 0 4px 14px -6px rgba(244, 91, 105, 0.45);
+}
+
+.btn-completar {
+  color: var(--verde);
+}
+
+/* «Listo» — el botón protagonista: degradado + glow cian pulsante */
+.btn-listo {
+  padding: 0.42rem 0.95rem;
+  border: none;
+  background: var(--grad-primario);
+  color: #fff;
+  font-size: var(--texto-sm);
+  box-shadow: var(--glow-cian);
+  animation: brilloListo 2.8s ease-in-out infinite;
+}
+
+.btn-listo:hover {
+  transform: translateY(-2px) scale(1.03);
+  border: none;
+  box-shadow: var(--glow-cian-fuerte);
+}
+
+/* ------------------------- CHIPS ----------------------------- */
+.chips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: var(--esp-3);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radio-pill);
+  border: 1px solid var(--borde-fuerte);
+  background: var(--superficie-alta);
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  color: var(--tinta-suave);
+  transition: background var(--dur-normal) var(--ease-suave), color var(--dur-rapida), border-color var(--dur-rapida), transform var(--dur-rapida) var(--ease-out);
+}
+
+.chip:hover {
+  transform: translateY(-1px);
+  border-color: var(--cian);
+}
+
+.chip.activo {
+  background: var(--grad-primario);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 16px -6px rgba(0, 119, 182, 0.5);
+}
+
+.chip-conteo {
+  min-width: 1.4em;
+  padding: 0 0.35em;
+  border-radius: var(--radio-pill);
+  background: rgba(14, 27, 44, 0.08);
+  font-size: var(--texto-xs);
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.chip.activo .chip-conteo {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ------------------------- TABLA ----------------------------- */
+.tabla-envoltura {
+  overflow-x: auto;
+  margin-inline: -0.3rem;
+}
+
+.tabla-citas {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--texto-sm);
+}
+
+.tabla-citas th {
+  text-align: left;
+  padding: 0.55rem 0.6rem;
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tinta-tenue);
+  border-bottom: 1px solid var(--borde-fuerte);
+  white-space: nowrap;
+}
+
+.tabla-citas td {
+  padding: 0.62rem 0.6rem;
+  border-bottom: 1px solid var(--borde);
+  vertical-align: middle;
+}
+
+.tabla-citas tbody tr {
+  transition: background-color var(--dur-rapida) var(--ease-suave);
+}
+
+.tabla-citas tbody tr:hover {
+  background: rgba(0, 180, 216, 0.05);
+}
+
+.tabla-citas tr.flash > td {
+  animation: flashFila 1.8s var(--ease-out);
+}
+
+.animar-filas tr {
+  animation: fadeUp var(--dur-normal) var(--ease-out) both;
+  animation-delay: calc(var(--orden, 0) * 35ms);
+}
+
+.celda-hora {
+  font-family: var(--fuente-titulo);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.celda-fecha {
+  display: block;
+  font-family: var(--fuente-texto);
+  font-weight: 400;
+  font-size: var(--texto-xs);
+  color: var(--tinta-tenue);
+}
+
+.celda-cliente strong {
+  display: block;
+  font-weight: 600;
+}
+
+.celda-telefono {
+  font-size: var(--texto-xs);
+  color: var(--tinta-tenue);
+}
+
+.nota-indicador {
+  cursor: help;
+  font-size: var(--texto-xs);
+}
+
+.placa {
+  display: inline-block;
+  padding: 0.14rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--borde-fuerte);
+  background: var(--superficie-solida);
+  font-family: var(--fuente-titulo);
+  font-weight: 700;
+  font-size: var(--texto-xs);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+/* ------------------------- BADGES ---------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem 0.65rem;
+  border-radius: var(--radio-pill);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge.estado-pendiente { background: var(--tinte-pendiente); color: #8A5800; }
+.badge.estado-confirmada { background: var(--tinte-confirmada); color: var(--azul); }
+.badge.estado-en_proceso { background: var(--tinte-proceso); color: var(--azul); }
+.badge.estado-listo { background: var(--tinte-listo); color: var(--lima-oscuro); }
+.badge.estado-completada { background: var(--tinte-completada); color: #0E7A57; }
+.badge.estado-cancelada { background: var(--tinte-cancelada); color: #B3273A; }
+.badge.estado-no_show { background: var(--tinte-noshow); color: #55677C; }
+
+/* ------------------ TARJETAS MÓVILES ------------------------- */
+.lista-citas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+}
+
+.cita-card {
+  padding: 0.9rem 1rem;
+  border-radius: var(--radio-asim-sm);
+  border: 1px solid var(--borde);
+  background: var(--superficie-alta);
+}
+
+.cita-card.flash {
+  animation: flashFila 1.8s var(--ease-out);
+}
+
+.cita-card-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-2);
+  margin-bottom: 0.45rem;
+}
+
+.cita-card-cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: var(--texto-sm);
+}
+
+.cita-card-meta {
+  color: var(--tinta-suave);
+}
+
+.cita-card-notas {
+  font-size: var(--texto-xs);
+  color: var(--tinta-tenue);
+  font-style: italic;
+}
+
+.cita-card-acciones {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.7rem;
+}
+
+.cita-card-acciones .btn-accion {
+  flex: 1;
+  justify-content: center;
+  min-height: 44px; /* touch-friendly */
+  font-size: var(--texto-sm);
+}
+
+/* ------------------------- TOASTS ---------------------------- */
+.toasts {
+  position: fixed;
+  bottom: var(--esp-4);
+  right: var(--esp-4);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+  max-width: min(360px, calc(100vw - 2rem));
+}
+
+.toast {
+  padding: 0.7rem 1rem;
+  border-radius: var(--radio-asim-sm);
+  background: var(--superficie-alta);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--borde-fuerte);
+  border-left: 3px solid var(--cian);
+  box-shadow: var(--sombra-2);
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity var(--dur-normal) var(--ease-out), transform var(--dur-normal) var(--ease-out);
+}
+
+.toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-exito { border-left-color: var(--verde); }
+.toast-listo { border-left-color: var(--lima); box-shadow: var(--glow-lima); }
+.toast-error { border-left-color: var(--coral); }
+
+/* ------------------------- MODAL ----------------------------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: var(--esp-4);
+}
+
+.modal-fondo {
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 27, 44, 0.35);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.modal-caja {
+  position: relative;
+  width: min(420px, 100%);
+  padding: var(--esp-5);
+  border-radius: var(--radio-asim);
+  animation: fadeUp var(--dur-normal) var(--ease-out) both;
+}
+
+.modal-caja p {
+  margin-top: var(--esp-2);
+  color: var(--tinta-suave);
+  font-size: var(--texto-sm);
+}
+
+.modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--esp-2);
+  margin-top: var(--esp-5);
+}
+
+/* ----------------------- SKELETON ---------------------------- */
+.skeleton-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.4rem 0;
+}
+
+.skeleton-fila {
+  position: relative;
+  overflow: hidden;
+  height: 44px;
+  border-radius: var(--radio-asim-sm);
+  background: rgba(14, 27, 44, 0.06);
+}
+
+.skeleton-fila::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* --------------------- ESTADO VACÍO -------------------------- */
+.estado-vacio {
+  padding: var(--esp-6) var(--esp-4);
+  text-align: center;
+  color: var(--tinta-tenue);
+}
+
+.estado-vacio-icono {
+  font-size: 2rem;
+  margin-bottom: var(--esp-2);
+}

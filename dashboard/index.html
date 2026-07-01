@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Panel de control del staff de Jaguar Carwash: citas, bahías e ingresos en tiempo real." />
+  <meta name="theme-color" content="#F5F8FC" />
+  <title>Jaguar Carwash — Panel del staff</title>
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M17 2h21a8 8 0 0 1 8 8v21a15 15 0 0 1-15 15H10a8 8 0 0 1-8-8V17A15 15 0 0 1 17 2Z' fill='%2300B4D8'/%3E%3Ctext x='24' y='31' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='17' fill='white'%3EJC%3C/text%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <div class="fondo-malla" aria-hidden="true"></div>
+
+  <!-- Logo reutilizable -->
+  <svg width="0" height="0" class="svg-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="grad-logo" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#00B4D8" />
+        <stop offset="1" stop-color="#0077B6" />
+      </linearGradient>
+      <symbol id="logo-jaguar" viewBox="0 0 48 48">
+        <path d="M17 2h21a8 8 0 0 1 8 8v21a15 15 0 0 1-15 15H10a8 8 0 0 1-8-8V17A15 15 0 0 1 17 2Z" fill="url(#grad-logo)" />
+        <path d="M14 12l4 5M34 12l-4 5" stroke="rgba(255,255,255,.5)" stroke-width="2.4" stroke-linecap="round" />
+        <text x="24" y="32" text-anchor="middle" font-family="'Space Grotesk',Arial,sans-serif" font-weight="700" font-size="16" fill="#fff">JC</text>
+        <circle cx="39" cy="39" r="3" fill="#B8F135" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <noscript>
+    <p class="aviso-noscript">El panel de Jaguar Carwash necesita JavaScript para funcionar.</p>
+  </noscript>
+
+  <!-- ================= LOGIN (in-page) ================= -->
+  <section id="pantalla-login" class="pantalla-login" aria-labelledby="login-titulo">
+    <div class="login-tarjeta vidrio borde-degradado anim-entrada">
+      <div class="marca">
+        <svg class="marca-logo" aria-hidden="true"><use href="#logo-jaguar" /></svg>
+        <div class="marca-texto">
+          <span class="marca-nombre">Jaguar Carwash</span>
+          <span class="marca-sub">Panel del staff</span>
+        </div>
+      </div>
+
+      <h1 id="login-titulo">Hola de nuevo 👋</h1>
+      <p class="login-sub">Ingresa para gestionar las citas del día.</p>
+
+      <form id="form-login" novalidate>
+        <div class="campo">
+          <label for="login-email">Correo electrónico</label>
+          <input id="login-email" name="email" type="email" inputmode="email"
+                 autocomplete="username" placeholder="staff@jaguar.pe" required />
+        </div>
+        <div class="campo">
+          <label for="login-password">Contraseña</label>
+          <input id="login-password" name="password" type="password"
+                 autocomplete="current-password" placeholder="••••••••" required minlength="6" />
+        </div>
+        <p id="login-error" class="login-error" role="alert" hidden></p>
+        <button type="submit" id="btn-ingresar" class="btn-primario">Ingresar</button>
+      </form>
+
+      <p id="login-ayuda" class="login-ayuda" hidden>
+        Modo demo — usa <strong>staff@jaguar.pe</strong> / <strong>demo123</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= APP ================= -->
+  <div id="app" hidden>
+    <header class="cabecera vidrio">
+      <div class="marca">
+        <svg class="marca-logo" aria-hidden="true"><use href="#logo-jaguar" /></svg>
+        <div class="marca-texto">
+          <span class="marca-nombre">Jaguar Carwash</span>
+          <span class="marca-sub">Panel del staff</span>
+        </div>
+      </div>
+      <div class="cabecera-acciones">
+        <span id="indicador-vivo" class="indicador-vivo" title="Actualizaciones en tiempo real">
+          <span class="punto-vivo" aria-hidden="true"></span>
+          <span id="indicador-texto">En vivo</span>
+        </span>
+        <span id="usuario-email" class="usuario-email"></span>
+        <button id="btn-salir" class="btn-fantasma" type="button">Salir</button>
+      </div>
+    </header>
+
+    <main class="contenido">
+      <!-- KPIs bento -->
+      <section class="bento" aria-label="Indicadores de hoy">
+        <article class="kpi kpi-hero vidrio borde-degradado con-escaneo anim-entrada" style="--orden:0">
+          <span class="kpi-icono" aria-hidden="true">🚗✨</span>
+          <h2 class="kpi-titulo">Vehículos listos</h2>
+          <p class="kpi-valor" id="kpi-listos" data-valor="0">0</p>
+          <p class="kpi-nota">esperando entrega — avisa al cliente con «Listo»</p>
+        </article>
+
+        <article class="kpi vidrio borde-degradado con-escaneo anim-entrada" style="--orden:1">
+          <span class="kpi-icono" aria-hidden="true">📅</span>
+          <h2 class="kpi-titulo">Citas hoy</h2>
+          <p class="kpi-valor" id="kpi-citas" data-valor="0">0</p>
+        </article>
+
+        <article class="kpi vidrio borde-degradado con-escaneo anim-entrada" style="--orden:2">
+          <span class="kpi-icono" aria-hidden="true">🧽</span>
+          <h2 class="kpi-titulo">En proceso</h2>
+          <p class="kpi-valor" id="kpi-proceso" data-valor="0">0</p>
+        </article>
+
+        <article class="kpi vidrio borde-degradado con-escaneo anim-entrada" style="--orden:3">
+          <span class="kpi-icono" aria-hidden="true">✅</span>
+          <h2 class="kpi-titulo">Completadas</h2>
+          <p class="kpi-valor" id="kpi-completadas" data-valor="0">0</p>
+        </article>
+
+        <article class="kpi kpi-ingresos vidrio borde-degradado con-escaneo anim-entrada" style="--orden:4">
+          <span class="kpi-icono" aria-hidden="true">💵</span>
+          <h2 class="kpi-titulo">Ingresos de hoy</h2>
+          <p class="kpi-valor" id="kpi-ingresos" data-valor="0">S/ 0</p>
+          <p class="kpi-nota">estimado — no incluye canceladas ni no-show</p>
+        </article>
+      </section>
+
+      <div class="tablero">
+        <!-- Tabla de citas -->
+        <section class="panel panel-citas vidrio borde-degradado anim-entrada" style="--orden:5" aria-labelledby="titulo-citas">
+          <header class="panel-citas-cabecera">
+            <h2 id="titulo-citas">Citas</h2>
+            <div class="buscador">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="m13.5 13.5 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <input id="buscador" type="search" placeholder="Buscar por nombre o placa…" aria-label="Buscar por nombre o placa" autocomplete="off" />
+            </div>
+          </header>
+
+          <div class="chips" id="chips-filtro" role="group" aria-label="Filtrar citas por fecha">
+            <button class="chip activo" data-filtro="hoy" type="button" aria-pressed="true">Hoy <span class="chip-conteo" data-conteo="hoy">0</span></button>
+            <button class="chip" data-filtro="manana" type="button" aria-pressed="false">Mañana <span class="chip-conteo" data-conteo="manana">0</span></button>
+            <button class="chip" data-filtro="semana" type="button" aria-pressed="false">Semana <span class="chip-conteo" data-conteo="semana">0</span></button>
+            <button class="chip" data-filtro="todas" type="button" aria-pressed="false">Todas <span class="chip-conteo" data-conteo="todas">0</span></button>
+          </div>
+
+          <div id="skeleton-citas" class="skeleton-grupo" aria-hidden="true">
+            <div class="skeleton-fila"></div>
+            <div class="skeleton-fila"></div>
+            <div class="skeleton-fila"></div>
+            <div class="skeleton-fila"></div>
+            <div class="skeleton-fila"></div>
+            <div class="skeleton-fila"></div>
+          </div>
+
+          <div class="tabla-envoltura" id="tabla-envoltura" hidden>
+            <table class="tabla-citas">
+              <thead>
+                <tr>
+                  <th scope="col">Hora</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Placa</th>
+                  <th scope="col">Vehículo</th>
+                  <th scope="col">Servicio</th>
+                  <th scope="col">Bahía</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col"><span class="visualmente-oculto">Acciones</span></th>
+                </tr>
+              </thead>
+              <tbody id="cuerpo-citas"></tbody>
+            </table>
+          </div>
+
+          <div id="lista-citas" class="lista-citas" hidden></div>
+
+          <div id="estado-vacio" class="estado-vacio" hidden>
+            <p class="estado-vacio-icono" aria-hidden="true">🔎</p>
+            <p>No encontramos citas que coincidan.</p>
+          </div>
+        </section>
+
+        <!-- Lateral: bahías + gráficos -->
+        <aside class="lateral">
+          <section class="panel panel-bahias vidrio borde-degradado anim-entrada" style="--orden:6" aria-labelledby="titulo-bahias">
+            <h2 id="titulo-bahias">Bahías</h2>
+            <div id="grid-bahias" class="grid-bahias"></div>
+          </section>
+
+          <section class="panel panel-graficos vidrio borde-degradado anim-entrada" style="--orden:7" aria-labelledby="titulo-graficos">
+            <h2 id="titulo-graficos">Resumen</h2>
+            <div class="grafico-bloque">
+              <h3>Citas por estado</h3>
+              <div class="dona-envoltura">
+                <canvas id="grafico-dona" width="170" height="170" role="img" aria-label="Gráfico de dona: citas por estado"></canvas>
+                <ul id="leyenda-dona" class="leyenda"></ul>
+              </div>
+            </div>
+            <div class="grafico-bloque">
+              <h3>Citas por día</h3>
+              <canvas id="grafico-barras" height="130" role="img" aria-label="Gráfico de barras: citas por día de la semana"></canvas>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toasts -->
+  <div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+
+  <!-- Modal de confirmación -->
+  <div id="modal" class="modal" hidden>
+    <div class="modal-fondo" data-modal-cerrar></div>
+    <div class="modal-caja vidrio borde-degradado" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+      <h3 id="modal-titulo">¿Cancelar cita?</h3>
+      <p id="modal-mensaje"></p>
+      <div class="modal-acciones">
+        <button id="modal-volver" class="btn-fantasma" type="button">Volver</button>
+        <button id="modal-ok" class="btn-peligro" type="button">Sí, cancelar</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

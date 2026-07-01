@@ -1,0 +1,23 @@
+# ============================================================
+# Jaguar Carwash — Orquestación en el VPS
+# El workflow de GitHub Actions hace: git pull + docker compose up
+# ============================================================
+
+services:
+  dashboard:
+    build: ./dashboard
+    container_name: jaguar-dashboard
+    restart: unless-stopped
+    ports:
+      # Cambia 8080 si en tu VPS ya usas ese puerto, o ponlo detrás
+      # de un reverse proxy (Caddy/Traefik/nginx) con HTTPS.
+      - "8080:80"
+    # Endurecimiento básico del contenedor
+    read_only: false # nginx necesita escribir /var/cache y /var/run
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

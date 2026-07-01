@@ -1,0 +1,475 @@
+/* ============================================================
+   Jaguar Carwash — Layout: login, cabecera, bento KPI,
+   panel de citas, bahías y gráficos (escritorio primero)
+   ============================================================ */
+
+/* ------------------------- LOGIN --------------------------- */
+.pantalla-login {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--esp-5);
+}
+
+.login-tarjeta {
+  width: min(420px, 100%);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border-radius: var(--radio-asim);
+}
+
+.login-tarjeta h1 {
+  margin-top: var(--esp-6);
+  font-size: 1.6rem;
+}
+
+.login-sub {
+  margin-top: var(--esp-1);
+  margin-bottom: var(--esp-5);
+  color: var(--tinta-suave);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+  margin-bottom: var(--esp-4);
+}
+
+.campo label {
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  color: var(--tinta-suave);
+}
+
+.campo input {
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-asim-sm);
+  background: var(--superficie-alta);
+  transition: border-color var(--dur-rapida) var(--ease-suave), box-shadow var(--dur-rapida) var(--ease-suave);
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: var(--cian);
+  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.18);
+}
+
+.campo input[aria-invalid='true'] {
+  border-color: var(--coral);
+}
+
+.login-error {
+  margin-bottom: var(--esp-3);
+  padding: 0.55rem 0.8rem;
+  border-radius: var(--radio-asim-sm);
+  background: var(--tinte-cancelada);
+  color: #B3273A;
+  font-size: var(--texto-sm);
+}
+
+.login-ayuda {
+  margin-top: var(--esp-4);
+  font-size: var(--texto-xs);
+  color: var(--tinta-tenue);
+  text-align: center;
+}
+
+/* ------------------------- MARCA --------------------------- */
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.marca-logo {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.marca-texto {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.marca-nombre {
+  font-family: var(--fuente-titulo);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.marca-sub {
+  font-size: var(--texto-xs);
+  color: var(--tinta-tenue);
+}
+
+/* ------------------------ CABECERA -------------------------- */
+.cabecera {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-4);
+  padding: 0.7rem clamp(1rem, 3vw, 2rem);
+  border-bottom: 1px solid var(--borde);
+}
+
+.cabecera-acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-4);
+  min-width: 0;
+}
+
+.indicador-vivo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radio-pill);
+  background: var(--tinte-confirmada);
+  color: var(--azul);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.punto-vivo {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cian);
+  animation: pulsoVivo 2.2s ease-in-out infinite;
+}
+
+.usuario-email {
+  font-size: var(--texto-sm);
+  color: var(--tinta-suave);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ------------------------ CONTENIDO ------------------------- */
+.contenido {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: var(--esp-seccion) clamp(1rem, 3vw, 2rem) var(--esp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-seccion);
+}
+
+/* -------------------- BENTO DE KPIs ------------------------- */
+/* Composición asimétrica: el héroe (Vehículos listos) domina.  */
+.bento {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.3fr;
+  grid-template-rows: auto auto;
+  gap: var(--esp-4);
+}
+
+.kpi {
+  position: relative;
+  overflow: hidden;
+  padding: 1.1rem 1.3rem;
+  border-radius: var(--radio-asim);
+  transition: transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
+}
+
+.kpi:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--glow-cian);
+}
+
+.kpi-hero {
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5rem 1.6rem;
+  background:
+    radial-gradient(circle at 85% 15%, rgba(184, 241, 53, 0.20), transparent 55%),
+    var(--superficie);
+}
+
+.kpi-hero:hover {
+  box-shadow: var(--glow-lima);
+}
+
+.kpi-ingresos {
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.kpi-icono {
+  font-size: 1.2rem;
+}
+
+.kpi-hero .kpi-icono {
+  font-size: 1.7rem;
+}
+
+.kpi-titulo {
+  margin-top: var(--esp-2);
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  color: var(--tinta-suave);
+  letter-spacing: 0.01em;
+}
+
+.kpi-valor {
+  margin-top: var(--esp-1);
+  font-family: var(--fuente-titulo);
+  font-weight: 700;
+  font-size: var(--texto-kpi);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-hero .kpi-valor {
+  font-size: var(--texto-kpi-hero);
+  background: linear-gradient(120deg, #7FA912, var(--azul));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.kpi-nota {
+  margin-top: var(--esp-1);
+  font-size: var(--texto-xs);
+  color: var(--tinta-tenue);
+  max-width: 26ch;
+}
+
+/* Línea de escaneo MUY sutil dentro de las tarjetas KPI */
+.con-escaneo::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 180, 216, 0.55), transparent);
+  animation: escaneo 7s linear infinite;
+  animation-delay: calc(var(--orden, 0) * 1.3s);
+  pointer-events: none;
+}
+
+/* ------------------------ TABLERO --------------------------- */
+.tablero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: var(--esp-4);
+  align-items: start;
+}
+
+.panel {
+  padding: 1.2rem 1.3rem;
+  border-radius: var(--radio-asim);
+}
+
+.panel h2 {
+  font-size: var(--texto-lg);
+}
+
+.lateral {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-4);
+  min-width: 0;
+}
+
+/* ------------------- PANEL DE CITAS ------------------------- */
+.panel-citas-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--esp-3);
+}
+
+.buscador {
+  position: relative;
+  flex: 1;
+  max-width: 320px;
+  min-width: 200px;
+}
+
+.buscador svg {
+  position: absolute;
+  left: 0.7rem;
+  top: 50%;
+  translate: 0 -50%;
+  width: 15px;
+  height: 15px;
+  color: var(--tinta-tenue);
+  pointer-events: none;
+}
+
+.buscador input {
+  width: 100%;
+  padding: 0.5rem 0.85rem 0.5rem 2.1rem;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-pill);
+  background: var(--superficie-alta);
+  font-size: var(--texto-sm);
+  transition: border-color var(--dur-rapida) var(--ease-suave), box-shadow var(--dur-rapida) var(--ease-suave);
+}
+
+.buscador input:focus {
+  outline: none;
+  border-color: var(--cian);
+  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.16);
+}
+
+/* ------------------------ BAHÍAS ---------------------------- */
+.grid-bahias {
+  margin-top: var(--esp-3);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--esp-3);
+}
+
+.bahia {
+  padding: 0.85rem 0.95rem;
+  border-radius: var(--radio-asim-sm);
+  border: 1px solid var(--borde);
+  background: var(--superficie-alta);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.bahia.ocupada {
+  border-color: rgba(0, 119, 182, 0.30);
+  background: linear-gradient(160deg, rgba(0, 180, 216, 0.08), rgba(255, 255, 255, 0.9));
+}
+
+.bahia-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-2);
+}
+
+.bahia-nombre {
+  font-family: var(--fuente-titulo);
+  font-weight: 700;
+  font-size: var(--texto-sm);
+}
+
+.bahia-etiqueta {
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  padding: 0.1rem 0.55rem;
+  border-radius: var(--radio-pill);
+}
+
+.bahia-etiqueta.libre {
+  background: var(--tinte-listo);
+  color: var(--lima-oscuro);
+}
+
+.bahia-etiqueta.ocupada {
+  background: var(--tinte-proceso);
+  color: var(--azul);
+}
+
+.bahia-vehiculo {
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bahia-detalle {
+  font-size: var(--texto-xs);
+  color: var(--tinta-tenue);
+}
+
+.progreso {
+  height: 6px;
+  border-radius: var(--radio-pill);
+  background: rgba(14, 27, 44, 0.08);
+  overflow: hidden;
+}
+
+.progreso-barra {
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: var(--grad-primario);
+  transform-origin: left center;
+  transform: scaleX(var(--p, 0));
+  transition: transform var(--dur-lenta) var(--ease-out);
+}
+
+/* ------------------------ GRÁFICOS -------------------------- */
+.grafico-bloque {
+  margin-top: var(--esp-4);
+}
+
+.grafico-bloque h3 {
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  color: var(--tinta-suave);
+  margin-bottom: var(--esp-2);
+}
+
+.dona-envoltura {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-4);
+}
+
+.dona-envoltura canvas {
+  flex-shrink: 0;
+  width: 150px;
+  height: 150px;
+}
+
+.leyenda {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: var(--texto-xs);
+  color: var(--tinta-suave);
+  min-width: 0;
+}
+
+.leyenda li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+
+.leyenda-punto {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.leyenda-valor {
+  margin-left: auto;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+#grafico-barras {
+  width: 100%;
+  height: 130px;
+}

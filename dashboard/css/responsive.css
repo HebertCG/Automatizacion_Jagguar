@@ -1,0 +1,194 @@
+/* ============================================================
+   Jaguar Carwash — Responsive
+   Breakpoints: 320 / 768 / 1024 / 1440
+   Base (styles.css) está pensada para >= 1024px.
+   ============================================================ */
+
+/* ----------------- < 1024px: tablero apilado ----------------- */
+@media (max-width: 1023px) {
+  .tablero {
+    grid-template-columns: 1fr;
+  }
+
+  .lateral {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .bento {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
+  }
+
+  .kpi-hero {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .kpi-ingresos {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--esp-2);
+  }
+}
+
+/* --------------------- < 768px: móvil ------------------------ */
+@media (max-width: 767px) {
+  .cabecera {
+    padding-inline: var(--esp-4);
+  }
+
+  .marca-sub,
+  .usuario-email {
+    display: none;
+  }
+
+  .indicador-vivo {
+    padding: 0.3rem 0.55rem;
+  }
+
+  .contenido {
+    padding-inline: var(--esp-4);
+  }
+
+  /* KPIs: carrusel horizontal con scroll-snap */
+  .bento {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: var(--esp-3);
+    padding-bottom: var(--esp-2);
+    margin-inline: calc(var(--esp-4) * -1);
+    padding-inline: var(--esp-4);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .bento::-webkit-scrollbar {
+    display: none;
+  }
+
+  .kpi {
+    flex: 0 0 72%;
+    max-width: 300px;
+    scroll-snap-align: start;
+  }
+
+  .kpi-hero {
+    flex-basis: 84%;
+  }
+
+  .kpi-ingresos {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Tabla → tarjetas apiladas (misma data, otro layout) */
+  .tabla-envoltura {
+    display: none !important;
+  }
+
+  .panel-citas-cabecera {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buscador {
+    max-width: none;
+  }
+
+  .chips {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.25rem;
+    scrollbar-width: none;
+  }
+
+  .chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chip {
+    flex-shrink: 0;
+  }
+
+  .lateral {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-bahias {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dona-envoltura {
+    flex-direction: row;
+  }
+
+  .toasts {
+    left: var(--esp-4);
+    right: var(--esp-4);
+    max-width: none;
+  }
+
+  .modal-acciones {
+    flex-direction: column-reverse;
+  }
+
+  .modal-acciones button {
+    width: 100%;
+    min-height: 46px;
+  }
+}
+
+/* ------------------ >= 768px: ocultar cards ------------------ */
+@media (min-width: 768px) {
+  .lista-citas {
+    display: none !important;
+  }
+}
+
+/* -------------------- <= 380px: muy angosto ------------------ */
+@media (max-width: 380px) {
+  .kpi {
+    flex-basis: 86%;
+  }
+
+  .grid-bahias {
+    grid-template-columns: 1fr;
+  }
+
+  .dona-envoltura {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cita-card-acciones .btn-accion {
+    flex-basis: 100%;
+  }
+}
+
+/* -------------------- >= 1440px: amplio ---------------------- */
+@media (min-width: 1440px) {
+  .tablero {
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: var(--esp-5);
+  }
+
+  .bento {
+    gap: var(--esp-5);
+  }
+
+  .panel {
+    padding: 1.5rem 1.7rem;
+  }
+
+  .dona-envoltura canvas {
+    width: 170px;
+    height: 170px;
+  }
+}

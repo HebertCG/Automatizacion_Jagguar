@@ -1,0 +1,49 @@
+# ============================================================
+# Jaguar Carwash — Despliegue automático al VPS
+#
+# Cada push a `main` entra por SSH al VPS, trae el código y
+# reconstruye el contenedor. Configura estos secretos en
+# GitHub → Settings → Secrets and variables → Actions:
+#
+#   VPS_HOST      → IP o dominio del VPS
+#   VPS_USER      → usuario SSH (ej. deploy)
+#   VPS_SSH_KEY   → clave privada SSH (solo para deploy, sin passphrase)
+#   VPS_PORT      → (opcional) puerto SSH, por defecto 22
+#
+# En el VPS, una sola vez:
+#   sudo mkdir -p /opt/cardwash-jaguar && sudo chown $USER /opt/cardwash-jaguar
+#   git clone git@github.com:TU-USUARIO/cardwash-jaguar.git /opt/cardwash-jaguar
+# ============================================================
+
+name: Desplegar al VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-produccion
+  cancel-in-progress: false
+
+jobs:
+  desplegar:
+    name: Deploy por SSH
+    runs-on: ubuntu-latest
+    steps:
+      - name: Conectar al VPS y actualizar
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            cd /opt/cardwash-jaguar
+            git fetch origin main
+            git reset --hard origin/main
+            docker compose up -d --build
+            docker image prune -f
+            echo "✅ Despliegue completado: $(git rev-parse --short HEAD)"
