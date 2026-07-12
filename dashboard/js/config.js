@@ -9,17 +9,23 @@
  *          "tiempo real" se simula (no necesita backend).
  *  false → Supabase real: Auth + vista v_citas + Realtime + polling.
  */
-export const MODO_DEMO = true;
+export const MODO_DEMO = false;
 
 // --- Supabase (solo aplica con MODO_DEMO = false) -------------
 // Usa SIEMPRE la clave publicable (anon/publishable).
 // ⚠️ NUNCA coloques aquí una service_role key: este código corre
 // en el navegador del staff y esa clave daría acceso total a la BD.
-export const SUPABASE_URL = 'https://TU-PROYECTO.supabase.co';
-export const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_REEMPLAZAR';
+export const SUPABASE_URL = 'https://rnmqbxynfbalefrhocdq.supabase.co';
+export const SUPABASE_PUBLISHABLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJubXFieHluZmJhbGVmcmhvY2RxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2Mjk4NTcsImV4cCI6MjA5OTIwNTg1N30.fTxl-JWLYY1WRVh2PJg0hiFGXa-Agra8NGriqEcxo4M';
 
 export const VISTA_CITAS = 'v_citas';   // vista de solo lectura
-export const TABLA_CITAS = 'citas';     // tabla real (updates + realtime)
+export const TABLA_CITAS = 'appointments'; // tabla real (updates + realtime)
+
+// --- Fuentes de datos del CRM (solo aplican con MODO_DEMO = false) ---
+export const VISTA_BANDEJA = 'v_bandeja';          // 1 fila por cliente (último msg)
+export const TABLA_CONVERSACIONES = 'conversations'; // mensajes (realtime)
+export const TABLA_CLIENTES = 'customers';          // clientes (handoff)
+export const FUNCION_ENVIAR_MENSAJE = 'enviar-mensaje-staff'; // Edge Function
 
 // --- Credenciales aceptadas en modo demo ----------------------
 export const DEMO_CREDENCIALES = Object.freeze({
@@ -103,17 +109,37 @@ export const SERVICIOS = Object.freeze({
 export const TIPOS_VEHICULO = Object.freeze({
   auto: { etiqueta: 'Auto', icono: '🚗' },
   suv: { etiqueta: 'SUV', icono: '🚙' },
-  camioneta: { etiqueta: 'Camioneta', icono: '🛻' },
+  camioneta: { etiqueta: 'Camioneta', icono: '🚘' },
+  pickup: { etiqueta: 'Pick Up', icono: '🛻' },
   moto: { etiqueta: 'Moto', icono: '🏍️' },
 });
 
 // Colores para los gráficos canvas (coinciden con tokens.css).
 export const COLORES_ESTADO = Object.freeze({
   pendiente: '#E8960C',
-  confirmada: '#00B4D8',
-  en_proceso: '#0077B6',
+  confirmada: '#F5A300',
+  en_proceso: '#D0480B',
   listo: '#8FC10D',
   completada: '#19A97B',
   cancelada: '#F45B69',
   no_show: '#8A99AB',
+});
+
+// ============================================================
+// Bandeja (WhatsApp Web) — conversaciones
+// ============================================================
+
+export const CHAT_LOTE_MENSAJES = 30;                 // mensajes por lote (scroll atrás)
+export const VENTANA_24H_MS = 24 * 60 * 60 * 1000;    // ventana de texto libre de Meta
+export const BANDEJA_POLLING_MS = 20_000;             // respaldo si Realtime se cae
+export const BANDEJA_TICK_DEMO_MS = 22_000;           // mensajes simulados en demo
+export const MENSAJE_MAX_LARGO = 4096;                // límite de Meta para texto
+
+// Roles de una conversación: quién habla y de qué lado/color va la burbuja.
+// cliente → burbuja blanca a la izquierda; bot y staff → burbuja verde a la
+// derecha, diferenciados solo por la etiqueta (mismo lado, como WhatsApp Web).
+export const ROLES_CHAT = Object.freeze({
+  cliente: { etiqueta: 'Cliente', lado: 'izquierda', clase: 'entrante', mini: '' },
+  bot: { etiqueta: 'Bot', lado: 'derecha', clase: 'saliente', mini: '🤖 Bot' },
+  staff: { etiqueta: 'Tú', lado: 'derecha', clase: 'saliente', mini: '👤 Tú' },
 });

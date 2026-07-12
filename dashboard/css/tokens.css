@@ -5,7 +5,7 @@
 
 :root {
   /* --- Paleta base --------------------------------------- */
-  --fondo: #F5F8FC;             /* blanco hielo con tinte azul */
+  --fondo: #FAF7F0;             /* marfil cálido — base Jaguar */
   --tinta: #0E1B2C;             /* texto principal */
   --tinta-suave: #46586E;       /* texto secundario */
   --tinta-tenue: #7C8DA1;       /* texto terciario / labels */
@@ -17,8 +17,8 @@
   --borde-fuerte: rgba(14, 27, 44, 0.16);
 
   /* --- Acentos -------------------------------------------- */
-  --cian: #00B4D8;              /* acento primario */
-  --azul: #0077B6;
+  --cian: #F5A300;              /* acento primario — dorado Jaguar */
+  --azul: #D0480B;              /* naranja quemado (texto/acentos fuertes) */
   --lima: #B8F135;              /* SOLO listo / éxito */
   --lima-oscuro: #5A7A00;       /* texto sobre fondos lima */
   --ambar: #E8960C;             /* pendiente */
@@ -27,12 +27,12 @@
   --gris-estado: #8A99AB;       /* no_show */
 
   --grad-primario: linear-gradient(135deg, var(--cian), var(--azul));
-  --grad-suave: linear-gradient(135deg, rgba(0, 180, 216, 0.12), rgba(0, 119, 182, 0.06));
+  --grad-suave: linear-gradient(135deg, rgba(245, 163, 0, 0.12), rgba(208, 72, 11, 0.06));
 
   /* --- Tintes por estado (fondos de badges) ---------------- */
   --tinte-pendiente: rgba(232, 150, 12, 0.14);
-  --tinte-confirmada: rgba(0, 180, 216, 0.14);
-  --tinte-proceso: rgba(0, 119, 182, 0.14);
+  --tinte-confirmada: rgba(245, 163, 0, 0.16);
+  --tinte-proceso: rgba(208, 72, 11, 0.13);
   --tinte-listo: rgba(184, 241, 53, 0.30);
   --tinte-completada: rgba(25, 169, 123, 0.14);
   --tinte-cancelada: rgba(244, 91, 105, 0.13);
@@ -41,8 +41,8 @@
   /* --- Sombras y brillos ----------------------------------- */
   --sombra-1: 0 1px 2px rgba(14, 27, 44, 0.05), 0 10px 28px -14px rgba(14, 27, 44, 0.14);
   --sombra-2: 0 2px 6px rgba(14, 27, 44, 0.06), 0 18px 44px -16px rgba(14, 27, 44, 0.20);
-  --glow-cian: 0 0 0 1px rgba(0, 180, 216, 0.30), 0 8px 28px -6px rgba(0, 180, 216, 0.45);
-  --glow-cian-fuerte: 0 0 0 1px rgba(0, 180, 216, 0.45), 0 10px 34px -4px rgba(0, 180, 216, 0.60);
+  --glow-cian: 0 0 0 1px rgba(245, 163, 0, 0.32), 0 8px 28px -6px rgba(245, 163, 0, 0.45);
+  --glow-cian-fuerte: 0 0 0 1px rgba(245, 163, 0, 0.48), 0 10px 34px -4px rgba(245, 163, 0, 0.60);
   --glow-lima: 0 0 0 1px rgba(184, 241, 53, 0.55), 0 8px 26px -6px rgba(150, 210, 20, 0.55);
 
   /* --- Esquinas asimétricas (grande arriba-izq / abajo-der) - */
@@ -77,6 +77,19 @@
   --esp-5: 1.5rem;
   --esp-6: 2rem;
   --esp-seccion: clamp(1rem, 0.6rem + 1.4vw, 1.75rem);
+
+  /* --- Navegación de secciones ----------------------------- */
+  --nav-alto: 54px;
+  --nav-z: 30;
+
+  /* --- Bandeja (réplica de WhatsApp Web) ------------------- */
+  --wa-fondo-chat: #ECE5DD;                       /* beige clásico del chat */
+  --wa-panel: #F6F3EE;                            /* lista de chats */
+  --wa-burbuja-entrante: #FFFFFF;                 /* cliente (izquierda) */
+  --wa-burbuja-saliente: #DCF8C6;                 /* bot + staff (derecha) */
+  --wa-burbuja-borde: rgba(14, 27, 44, 0.06);
+  --wa-check: #34B7F1;                            /* doble check "leído" */
+  --wa-cabecera: rgba(255, 255, 255, 0.9);
 }
 
 /* Con movimiento reducido, todo lo animado se vuelve inmediato */

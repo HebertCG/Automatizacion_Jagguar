@@ -19,6 +19,7 @@ import {
   aplicarCita,
   cargarCitas,
   primeraBahiaLibre,
+  normalizarCitaReal,
   NOMBRES_DEMO,
 } from './data.js';
 import { toast } from './ui.js';
@@ -98,7 +99,7 @@ async function traerCitaDeVista(id) {
       .eq('id', id)
       .maybeSingle();
     if (error) throw error;
-    if (data) aplicarCita(data, 'tiemporeal');
+    if (data) aplicarCita(normalizarCitaReal(data), 'tiemporeal');
   } catch (err) {
     console.error('[realtime] No se pudo leer la cita cambiada:', err);
   }

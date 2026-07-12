@@ -127,6 +127,23 @@ export function generarCitasDemo() {
 // ------------------------------------------------------------
 // Carga de datos (demo o Supabase)
 // ------------------------------------------------------------
+
+/**
+ * Adapta una fila de v_citas al formato del front:
+ * bahía 'B01' → 1, precio numérico, campos opcionales seguros.
+ */
+export function normalizarCitaReal(fila) {
+  const numeroBahia = fila.bahia
+    ? Number(String(fila.bahia).replace(/\D/g, '')) || null
+    : null;
+  return Object.freeze({
+    ...fila,
+    precio: Number(fila.precio) || 0,
+    bahia: numeroBahia,
+    notas: fila.notas ?? '',
+    iniciado_en: fila.iniciado_en ?? null,
+  });
+}
 export async function cargarCitas({ silencioso = false } = {}) {
   if (!silencioso) publicar({ cargando: true }, { origen: 'carga' });
 
@@ -144,7 +161,7 @@ export async function cargarCitas({ silencioso = false } = {}) {
       .select('*')
       .order('fecha_hora', { ascending: true });
     if (error) throw error;
-    publicar({ citas: data ?? [], cargando: false }, { origen: 'carga' });
+    publicar({ citas: (data ?? []).map(normalizarCitaReal), cargando: false }, { origen: 'carga' });
   } catch (err) {
     console.error('[data] Error al cargar citas:', err);
     publicar({ cargando: false }, { origen: 'error', mensaje: 'No pudimos cargar las citas.' });
@@ -221,7 +238,8 @@ function coincideBusqueda(cita, aguja) {
   if (!aguja) return true;
   return (
     normalizar(cita.cliente).includes(aguja) ||
-    normalizar(cita.placa).includes(aguja)
+    normalizar(cita.placa).includes(aguja) ||
+    normalizar(cita.dni).includes(aguja)
   );
 }
 
@@ -269,7 +287,8 @@ export function estadoBahias() {
     const cita = enProceso.find((c) => c.bahia === numero) ?? null;
     if (!cita) return { numero, cita: null, progreso: 0, restanteMin: 0 };
 
-    const duracionMs = SERVICIOS[cita.servicio].duracionMin * 60_000;
+    const duracionMs =
+      (Number(cita.duracion_min) || SERVICIOS[cita.servicio]?.duracionMin || 60) * 60_000;
     const inicio = new Date(cita.iniciado_en ?? cita.fecha_hora).getTime();
     const progreso = Math.min(Math.max((Date.now() - inicio) / duracionMs, 0.04), 0.97);
     const restanteMin = Math.max(Math.round((duracionMs * (1 - progreso)) / 60_000), 1);

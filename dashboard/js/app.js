@@ -9,6 +9,7 @@ import * as datos from './data.js';
 import * as render from './render.js';
 import { conectarAcciones } from './actions.js';
 import { iniciarTiempoReal, detenerTiempoReal } from './realtime.js';
+import { iniciarRouter, detenerSecciones, moduloActivo } from './router.js';
 import {
   toast,
   debounce,
@@ -140,6 +141,16 @@ async function iniciarApp(email) {
   temporizadorBahias = setInterval(() => {
     render.renderBahias(datos.estadoBahias());
   }, REFRESCO_BAHIAS_MS);
+
+  // Navegación entre secciones. Citas ya quedó inicializada arriba (ruta por
+  // defecto, sin `cargar`). Las demás se importan al abrirse por primera vez.
+  iniciarRouter([
+    { id: 'citas', hash: '#/citas' },
+    { id: 'bandeja', hash: '#/bandeja', cargar: () => import('./bandeja/index.js') },
+    { id: 'clientes', hash: '#/clientes' },
+    { id: 'metricas', hash: '#/metricas' },
+    { id: 'agenda', hash: '#/agenda' },
+  ]);
 }
 
 function conectarFiltros() {
@@ -159,6 +170,7 @@ function conectarFiltros() {
 function conectarSalir() {
   $('btn-salir').addEventListener('click', async () => {
     detenerTiempoReal();
+    detenerSecciones(); // corta realtime/timers de Bandeja y demás secciones
     if (temporizadorBahias) clearInterval(temporizadorBahias);
     await auth.cerrarSesion();
     // Recarga limpia: garantiza que no quede estado en memoria.
@@ -175,6 +187,8 @@ function conectarResize() {
       if (!appIniciada) return;
       render.renderDona(datos.serieDona());
       render.renderBarras(datos.serieBarras());
+      // La sección visible (Bandeja/Métricas/Agenda) redibuja lo suyo.
+      moduloActivo()?.onMostrar?.();
     }, 200)
   );
 }

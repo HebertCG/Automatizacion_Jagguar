@@ -16,8 +16,8 @@ import { toast, confirmar } from './ui.js';
 /** Mensajes de éxito por acción (el nombre se interpola como texto plano). */
 const MENSAJES = {
   confirmar: (c) => [`✅ Cita de ${c.cliente} confirmada`, 'exito'],
-  iniciar: (c) => [`🧽 Lavado de ${c.placa} iniciado en la bahía ${c.bahia ?? '—'}`, 'info'],
-  listo: (c) => [`🚗✨ ¡${c.placa} está listo! Se envió el aviso por WhatsApp a ${c.cliente}`, 'listo'],
+  iniciar: (c) => [`🧽 Servicio de ${c.placa || c.cliente} iniciado en la bahía ${c.bahia ?? '—'}`, 'info'],
+  listo: (c) => [`🚗✨ ¡El vehículo de ${c.cliente} está listo! Se le avisará por WhatsApp`, 'listo'],
   completar: (c) => [`✔ Cita de ${c.cliente} completada. ¡Buen trabajo!`, 'exito'],
   cancelar: (c) => [`✖ Cita de ${c.cliente} cancelada`, 'error'],
 };
@@ -27,11 +27,9 @@ async function persistirCambio(id, nuevoEstado) {
   if (MODO_DEMO) return; // en demo el store local es la única verdad
 
   const supabase = await obtenerCliente();
-  const cambios = { estado: nuevoEstado };
-  if (nuevoEstado === 'en_proceso') {
-    cambios.iniciado_en = new Date().toISOString();
-  }
-  const { error } = await supabase.from(TABLA_CITAS).update(cambios).eq('id', id);
+  // La RLS del panel solo permite al staff actualizar la columna `status`
+  // (07-dashboard_security.sql) y en la BD la columna se llama status, no estado.
+  const { error } = await supabase.from(TABLA_CITAS).update({ status: nuevoEstado }).eq('id', id);
   if (error) throw error;
 }
 
@@ -59,7 +57,7 @@ export async function ejecutarAccion(id, accion) {
   if (accion === 'cancelar') {
     const seguro = await confirmar({
       titulo: '¿Cancelar esta cita?',
-      mensaje: `Se cancelará la cita de ${cita.cliente} (${cita.placa}). Esta acción no se puede deshacer.`,
+      mensaje: `Se cancelará la cita de ${cita.cliente} (${cita.placa || cita.tipo_vehiculo || 'vehículo'}). Esta acción no se puede deshacer.`,
       textoOk: 'Sí, cancelar cita',
     });
     if (!seguro) return;

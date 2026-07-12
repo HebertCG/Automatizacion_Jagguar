@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/components.css" />
   <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <link rel="stylesheet" href="css/bandeja.css" />
 
   <script type="module" src="js/app.js"></script>
 </head>
@@ -99,7 +101,18 @@
       </div>
     </header>
 
+    <!-- Navegación entre secciones del CRM (tabs arriba / barra inferior en móvil) -->
+    <nav class="nav-secciones" aria-label="Secciones del panel">
+      <a href="#/citas" data-seccion="citas" class="activo" aria-current="page"><span class="nav-icono" aria-hidden="true">📅</span><span class="nav-txt">Citas</span></a>
+      <a href="#/bandeja" data-seccion="bandeja"><span class="nav-icono" aria-hidden="true">💬</span><span class="nav-txt">Bandeja</span></a>
+      <a href="#/clientes" data-seccion="clientes"><span class="nav-icono" aria-hidden="true">👥</span><span class="nav-txt">Clientes</span></a>
+      <a href="#/metricas" data-seccion="metricas"><span class="nav-icono" aria-hidden="true">📈</span><span class="nav-txt">Métricas</span></a>
+      <a href="#/agenda" data-seccion="agenda"><span class="nav-icono" aria-hidden="true">🗓️</span><span class="nav-txt">Agenda</span></a>
+    </nav>
+
     <main class="contenido">
+      <!-- ===================== CITAS (sección existente, intacta) ===================== -->
+      <section class="seccion" id="seccion-citas" aria-label="Citas del día">
       <!-- KPIs bento -->
       <section class="bento" aria-label="Indicadores de hoy">
         <article class="kpi kpi-hero vidrio borde-degradado con-escaneo anim-entrada" style="--orden:0">
@@ -211,6 +224,69 @@
           </section>
         </aside>
       </div>
+      </section><!-- /seccion-citas -->
+
+      <!-- ===================== BANDEJA (réplica de WhatsApp Web) ===================== -->
+      <section class="seccion" id="seccion-bandeja" hidden aria-label="Bandeja de mensajes">
+        <div class="bandeja" id="bandeja">
+          <!-- Panel izquierdo: lista de chats -->
+          <aside class="bandeja-lista" id="bandeja-lista" aria-label="Conversaciones">
+            <header class="bandeja-lista-cabecera">
+              <h2 id="titulo-bandeja">Bandeja</h2>
+              <div class="buscador">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="m13.5 13.5 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <input id="bandeja-buscador" type="search" placeholder="Buscar chat…" aria-label="Buscar conversación" autocomplete="off" />
+              </div>
+            </header>
+            <div id="bandeja-chats" class="bandeja-chats" role="list" aria-busy="true">
+              <div class="skeleton-grupo" aria-hidden="true">
+                <div class="skeleton-fila"></div><div class="skeleton-fila"></div>
+                <div class="skeleton-fila"></div><div class="skeleton-fila"></div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Panel derecho: conversación -->
+          <div class="bandeja-panel" id="bandeja-panel">
+            <div class="bandeja-vacio" id="bandeja-vacio">
+              <p class="bandeja-vacio-icono" aria-hidden="true">💬</p>
+              <p>Elige una conversación para empezar a chatear.</p>
+            </div>
+            <div class="bandeja-chat" id="bandeja-chat" hidden>
+              <header class="bandeja-cabecera" id="bandeja-cabecera"></header>
+              <div class="bandeja-conversacion" id="bandeja-conversacion" tabindex="0" aria-label="Mensajes de la conversación" aria-live="polite"></div>
+              <footer class="bandeja-composer" id="bandeja-composer"></footer>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== CLIENTES (Fase 2) ===================== -->
+      <section class="seccion" id="seccion-clientes" hidden aria-label="Clientes">
+        <div class="seccion-placeholder">
+          <p class="seccion-placeholder-icono" aria-hidden="true">👥</p>
+          <h2>Clientes</h2>
+          <p>El directorio de clientes llega en la próxima etapa.</p>
+        </div>
+      </section>
+
+      <!-- ===================== MÉTRICAS (Fase 3) ===================== -->
+      <section class="seccion" id="seccion-metricas" hidden aria-label="Métricas">
+        <div class="seccion-placeholder">
+          <p class="seccion-placeholder-icono" aria-hidden="true">📈</p>
+          <h2>Métricas</h2>
+          <p>El embudo de conversión y los gráficos llegan en la próxima etapa.</p>
+        </div>
+      </section>
+
+      <!-- ===================== AGENDA (Fase 4) ===================== -->
+      <section class="seccion" id="seccion-agenda" hidden aria-label="Agenda">
+        <div class="seccion-placeholder">
+          <p class="seccion-placeholder-icono" aria-hidden="true">🗓️</p>
+          <h2>Agenda</h2>
+          <p>La vista semanal tipo calendario llega en la próxima etapa.</p>
+        </div>
+      </section>
     </main>
   </div>
 

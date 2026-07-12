@@ -79,7 +79,7 @@ function filaTabla(cita) {
   return `<tr data-id="${esc(cita.id)}">
     <td class="celda-hora">${htmlHora(cita)}</td>
     <td class="celda-cliente"><strong>${esc(cita.cliente)}${nota}</strong><span class="celda-telefono">${esc(cita.telefono)}</span></td>
-    <td><span class="placa">${esc(cita.placa)}</span></td>
+    <td><span class="placa">${esc(cita.placa || cita.dni || '—')}</span></td>
     <td>${tipo.icono} ${esc(tipo.etiqueta)}</td>
     <td>${esc(servicio)} · ${esc(formatearSoles(cita.precio))}</td>
     <td>${cita.bahia ? `B${esc(cita.bahia)}` : '—'}</td>
@@ -100,7 +100,7 @@ function cardMovil(cita) {
     </header>
     <div class="cita-card-cuerpo">
       <strong>${esc(cita.cliente)}</strong>
-      <span class="cita-card-meta"><span class="placa">${esc(cita.placa)}</span> · ${tipo.icono} ${esc(tipo.etiqueta)}</span>
+      <span class="cita-card-meta"><span class="placa">${esc(cita.placa || cita.dni || '—')}</span> · ${tipo.icono} ${esc(tipo.etiqueta)}</span>
       <span class="cita-card-meta">${esc(servicio)} · ${esc(formatearSoles(cita.precio))}${bahia}</span>
       ${notas}
     </div>
@@ -172,7 +172,7 @@ export function renderBahias(bahias) {
       const pct = Math.round(b.progreso * 100);
       return `<article class="bahia ocupada" aria-label="Bahía ${b.numero} ocupada">
         <header class="bahia-cabecera"><span class="bahia-nombre">Bahía ${b.numero}</span><span class="bahia-etiqueta ocupada">Ocupada</span></header>
-        <p class="bahia-vehiculo">${tipo.icono} ${esc(b.cita.placa)} · ${esc(b.cita.cliente)}</p>
+        <p class="bahia-vehiculo">${tipo.icono} ${esc(b.cita.placa || tipo.etiqueta)} · ${esc(b.cita.cliente)}</p>
         <p class="bahia-detalle">${esc(servicio)} · quedan ~${b.restanteMin} min</p>
         <div class="progreso" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Avance del servicio">
           <div class="progreso-barra" style="--p:${b.progreso.toFixed(3)}"></div>
@@ -280,11 +280,11 @@ export function renderBarras({ valores, hoyIndice }) {
 
     if (esHoyBarra) {
       const grad = ctx.createLinearGradient(0, y, 0, y + altura);
-      grad.addColorStop(0, '#00B4D8');
-      grad.addColorStop(1, '#0077B6');
+      grad.addColorStop(0, '#F5B301');
+      grad.addColorStop(1, '#E5661A');
       ctx.fillStyle = grad;
     } else {
-      ctx.fillStyle = 'rgba(0, 119, 182, 0.18)';
+      ctx.fillStyle = 'rgba(229, 102, 26, 0.18)';
     }
 
     ctx.beginPath();
@@ -297,7 +297,7 @@ export function renderBarras({ valores, hoyIndice }) {
 
     // Valor encima de la barra
     if (valor > 0) {
-      ctx.fillStyle = esHoyBarra ? '#0077B6' : '#7C8DA1';
+      ctx.fillStyle = esHoyBarra ? '#C2410C' : '#7C8DA1';
       ctx.font = "600 11px 'Space Grotesk', sans-serif";
       ctx.textAlign = 'center';
       ctx.fillText(String(valor), x + anchoBarra / 2, y - 5);
