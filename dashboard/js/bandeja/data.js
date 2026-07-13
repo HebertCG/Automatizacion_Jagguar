@@ -302,6 +302,38 @@ export function fijarHandoff(cid, handoff) {
   publicar({ chats }, { origen: 'handoff', id: cid });
 }
 
+/**
+ * Respaldo del chat ABIERTO: trae los mensajes más nuevos que el último
+ * cargado y los aplica (append + dedupe). Hace que la conversación abierta se
+ * actualice aunque el Realtime no entregue el evento. Solo en modo real.
+ */
+export async function refrescarActivo() {
+  if (MODO_DEMO) return;
+  const cid = estado.activoId;
+  if (!cid) return;
+  const cargados = estado.mensajes[cid];
+  if (!cargados || !cargados.length) return;
+
+  // Tiempo del último mensaje REAL (ignora burbujas optimistas tmp-).
+  const reales = cargados.filter((m) => !String(m.id).startsWith('tmp-'));
+  if (!reales.length) return;
+  const desde = reales[reales.length - 1].created_at;
+
+  try {
+    const supabase = await obtenerCliente();
+    const { data, error } = await supabase
+      .from(TABLA_CONVERSACIONES)
+      .select('*')
+      .eq('customer_id', cid)
+      .gt('created_at', desde)
+      .order('created_at', { ascending: true });
+    if (error) throw error;
+    (data ?? []).forEach((fila) => aplicarMensajeEntrante(fila));
+  } catch (err) {
+    console.error('[bandeja] No se pudo refrescar el chat abierto:', err);
+  }
+}
+
 // ------------------------------------------------------------
 // Búsqueda de chats (en memoria)
 // ------------------------------------------------------------

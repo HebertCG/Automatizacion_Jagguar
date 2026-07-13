@@ -131,7 +131,8 @@ export const COLORES_ESTADO = Object.freeze({
 
 export const CHAT_LOTE_MENSAJES = 30;                 // mensajes por lote (scroll atrás)
 export const VENTANA_24H_MS = 24 * 60 * 60 * 1000;    // ventana de texto libre de Meta
-export const BANDEJA_POLLING_MS = 20_000;             // respaldo si Realtime se cae
+export const BANDEJA_POLLING_MS = 20_000;             // respaldo de la LISTA si Realtime se cae
+export const BANDEJA_REFRESCO_ACTIVO_MS = 5_000;      // respaldo del CHAT ABIERTO (near-live)
 export const BANDEJA_TICK_DEMO_MS = 22_000;           // mensajes simulados en demo
 export const MENSAJE_MAX_LARGO = 4096;                // límite de Meta para texto
 
