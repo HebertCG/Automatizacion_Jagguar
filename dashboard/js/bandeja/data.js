@@ -303,21 +303,17 @@ export function fijarHandoff(cid, handoff) {
 }
 
 /**
- * Respaldo del chat ABIERTO: trae los mensajes más nuevos que el último
- * cargado y los aplica (append + dedupe). Hace que la conversación abierta se
- * actualice aunque el Realtime no entregue el evento. Solo en modo real.
+ * Respaldo del chat ABIERTO: re-lee el último lote y aplica lo que aún no está
+ * (dedupe por id). Hace que la conversación abierta se actualice aunque el
+ * Realtime no entregue el evento. Es robusto ante precisión de timestamps.
+ * Solo en modo real; se salta si la pestaña está en segundo plano.
  */
 export async function refrescarActivo() {
   if (MODO_DEMO) return;
+  if (typeof document !== 'undefined' && document.hidden) return;
   const cid = estado.activoId;
   if (!cid) return;
-  const cargados = estado.mensajes[cid];
-  if (!cargados || !cargados.length) return;
-
-  // Tiempo del último mensaje REAL (ignora burbujas optimistas tmp-).
-  const reales = cargados.filter((m) => !String(m.id).startsWith('tmp-'));
-  if (!reales.length) return;
-  const desde = reales[reales.length - 1].created_at;
+  if (!estado.mensajes[cid]) return; // aún no se abrió/cargó el chat
 
   try {
     const supabase = await obtenerCliente();
@@ -325,10 +321,11 @@ export async function refrescarActivo() {
       .from(TABLA_CONVERSACIONES)
       .select('*')
       .eq('customer_id', cid)
-      .gt('created_at', desde)
-      .order('created_at', { ascending: true });
+      .order('created_at', { ascending: false })
+      .limit(CHAT_LOTE_MENSAJES);
     if (error) throw error;
-    (data ?? []).forEach((fila) => aplicarMensajeEntrante(fila));
+    // De más viejo a más nuevo; aplicarMensajeEntrante ignora los ya presentes.
+    (data ?? []).reverse().forEach((fila) => aplicarMensajeEntrante(fila));
   } catch (err) {
     console.error('[bandeja] No se pudo refrescar el chat abierto:', err);
   }
