@@ -12,3 +12,6 @@ desktop.ini
 # Logs y temporales
 *.log
 tmp/
+
+# Temporales del CLI de Supabase
+supabase/.temp/

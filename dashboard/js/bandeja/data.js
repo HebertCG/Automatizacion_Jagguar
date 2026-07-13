@@ -101,10 +101,16 @@ export async function cargarChats({ silencioso = false } = {}) {
       .select('*')
       .order('ultimo_at', { ascending: false });
     if (error) throw error;
-    publicar(
-      { chats: (data ?? []).map(normalizarChat), cargandoLista: false },
-      { origen: 'carga' }
-    );
+
+    // v_bandeja calcula no_leidos = mensajes del cliente sin respuesta. El chat
+    // que el staff tiene ABIERTO ya lo está viendo: no debe recuperar el badge
+    // en cada polling.
+    const chats = (data ?? []).map(normalizarChat);
+    const conLeidos = estado.activoId
+      ? chats.map((c) => (c.id === estado.activoId ? { ...c, no_leidos: 0 } : c))
+      : chats;
+
+    publicar({ chats: conLeidos, cargandoLista: false }, { origen: 'carga' });
   } catch (err) {
     console.error('[bandeja] Error al cargar chats:', err);
     publicar(

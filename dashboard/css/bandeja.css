@@ -8,8 +8,13 @@
 .bandeja {
   display: grid;
   grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
-  height: calc(100vh - 9.5rem);  /* fallback si no hay soporte de dvh */
-  height: calc(100dvh - 9.5rem);
+  /* Fila ACOTADA: sin esto la fila implícita es `auto` y crece al alto del
+     contenido, así el panel nunca se vuelve contenedor de scroll y los
+     mensajes nuevos quedan fuera de vista. */
+  grid-template-rows: minmax(0, 1fr);
+  /* Descuento = cabecera + nav + paddings de .contenido (sin scroll de página). */
+  height: calc(100vh - 10.5rem);  /* fallback si no hay soporte de dvh */
+  height: calc(100dvh - 10.5rem);
   min-height: 480px;
   border-radius: var(--radio-asim);
   overflow: hidden;
@@ -160,6 +165,7 @@
 .bandeja-panel {
   position: relative;
   min-width: 0;
+  min-height: 0; /* imprescindible: deja que .bandeja-conversacion sea el scroller */
   display: flex;
   flex-direction: column;
 }
@@ -444,8 +450,9 @@
 @media (max-width: 767px) {
   .bandeja {
     grid-template-columns: 1fr;
-    height: calc(100vh - 7.5rem);  /* fallback si no hay soporte de dvh */
-    height: calc(100dvh - 7.5rem);
+    /* Descuento = cabecera + padding + barra de nav inferior fija. */
+    height: calc(100vh - 9.5rem);  /* fallback si no hay soporte de dvh */
+    height: calc(100dvh - 9.5rem);
     min-height: 0;
     border-radius: var(--radio-asim-sm);
   }
