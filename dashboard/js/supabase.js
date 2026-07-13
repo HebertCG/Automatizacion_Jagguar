@@ -5,7 +5,10 @@
 
 import { MODO_DEMO, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './config.js';
 
-const CDN_SUPABASE = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+// Versión PINEADA (no rango `@2`): evita que un release 2.x malicioso o un
+// cambio en el CDN inyecte código con acceso al DOM y al JWT de sesión.
+// Al actualizar, revisa el changelog y sube este número a conciencia.
+const CDN_SUPABASE = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.2/+esm';
 
 let cliente = null;
 let cargando = null;

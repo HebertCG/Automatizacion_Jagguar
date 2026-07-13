@@ -58,8 +58,12 @@ function mensajeErrorEnvio(err) {
  * con el eco de Realtime.
  *
  * ⚠️ set_handoff(p_phone, p_activo): se asume p_activo = valor de `handoff`
- * (true ⇒ humano atiende). Verifica el cuerpo del RPC desplegado (migración
- * 15 lo re-crea con auditoría) si el toggle quedara invertido.
+ * (true ⇒ humano atiende). Verifica el cuerpo del RPC desplegado si el toggle
+ * quedara invertido.
+ *
+ * SEGURIDAD: se llama a `staff_set_handoff` (wrapper con verificación es_staff,
+ * migración 16), NO al `set_handoff` crudo — así el toggle no queda expuesto a
+ * cualquier usuario autenticado.
  */
 export async function alternarBot(chat) {
   if (!chat) return;
@@ -70,7 +74,7 @@ export async function alternarBot(chat) {
   try {
     if (!MODO_DEMO) {
       const supabase = await obtenerCliente();
-      const { error } = await supabase.rpc('set_handoff', {
+      const { error } = await supabase.rpc('staff_set_handoff', {
         p_phone: aE164(chat.telefono),
         p_activo: nuevoHandoff,
       });

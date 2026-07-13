@@ -147,15 +147,47 @@ el estado.
 
 ## Seguridad incluida
 
-- **Anti-XSS**: todo dato del cliente (nombre, notas, placa, teléfono) pasa por
-  `esc()` antes de tocar el DOM; toasts y modal usan `textContent`.
-- **CSP estricta** en nginx: solo `self`, jsdelivr (SDK Supabase) y Google Fonts.
+- **Anti-XSS**: todo dato del cliente (nombre, notas, placa, teléfono, contenido
+  de WhatsApp) pasa por `esc()` antes de tocar el DOM; toasts y modal usan
+  `textContent`.
+- **CSP estricta** en nginx: `self`, jsdelivr (SDK Supabase) y Google Fonts;
+  `frame-ancestors 'none'` + HSTS + `Cross-Origin-Opener-Policy`.
 - `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`,
-  `Permissions-Policy`, `server_tokens off`.
-- Solo clave **publicable** en el cliente + RLS en Supabase.
-- Validación de inputs en el login y de acciones en `actions.js` (no se confía
-  en atributos del DOM).
+  `Permissions-Policy`, `server_tokens off`, `limit_req` de borde.
+- Solo clave **publicable** en el cliente + RLS en Supabase; SDK **pineado** a
+  versión exacta (no rango flotante).
+- **Autorización de staff**: RLS restrictiva por `es_staff()`; la Edge Function
+  verifica staff; el envío de WhatsApp y los RPCs sensibles no quedan expuestos a
+  cualquier usuario autenticado.
+- **Sesión**: cierre automático por 30 min de inactividad.
+- Validación de inputs en el login y de acciones (no se confía en el DOM).
 - Contenedor con `no-new-privileges`, healthcheck y logs rotados.
+
+## 🔒 Endurecimiento de seguridad — pasos que corres tú
+
+Estos arreglos cierran un hueco **crítico**: sin ellos, cualquiera que se registre
+en tu Supabase (el signup es público por defecto) podía leer TODAS las
+conversaciones/DNIs/teléfonos y enviar WhatsApp con tu número. Aplícalos en orden:
+
+1. **SQL** en Supabase → SQL Editor, en orden:
+   `13 → 14 → 15` (si aún no) → **`16_authz_staff.sql`** → **`17_lockdown_rpcs.sql`**.
+   - `16` crea la tabla `staff`, `es_staff()`, RLS restrictiva y el wrapper
+     `staff_set_handoff`. **Ajusta los emails sembrados** (`staff@jaguar.com`, …)
+     a los reales de tu equipo, o añade filas: `insert into staff(user_id) select id from auth.users where email='...';`
+   - `17` revoca los RPCs del bot a los clientes del navegador. **Solo si tu bot
+     n8n usa la `service_role` key** (setup estándar). Si usa el anon key, muévelo
+     a service_role primero.
+2. **Auth → Providers → Email**: desactiva *"Allow new users to sign up"* (crea
+   staff por invitación / Admin API). Defensa en profundidad además de `es_staff()`.
+3. **Edge Function**: `supabase secrets set CORS_ORIGIN=https://paneljaguar.klassia.lat`
+   y redeploy: `supabase functions deploy enviar-mensaje-staff`.
+4. **Recomendado**: activa **CAPTCHA** (Turnstile/hCaptcha) en Auth para frenar
+   fuerza bruta contra las pocas cuentas de staff.
+5. **Verifica** que Coolify/Traefik ya sirva HTTPS con HSTS (o confía en el header
+   que ahora emite nginx).
+
+> Tras `16`, el front usa `staff_set_handoff`: corre la migración **antes o junto**
+> con el deploy del front, o el toggle del bot mostrará un error hasta que exista.
 
 ## Accesibilidad y rendimiento
 

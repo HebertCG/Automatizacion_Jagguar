@@ -3,7 +3,7 @@
 // render, acciones y tiempo real. No contiene lógica de negocio.
 // ============================================================
 
-import { MODO_DEMO, REFRESCO_BAHIAS_MS } from './config.js';
+import { MODO_DEMO, REFRESCO_BAHIAS_MS, DEMO_CREDENCIALES } from './config.js';
 import * as auth from './auth.js';
 import * as datos from './data.js';
 import * as render from './render.js';
@@ -21,8 +21,11 @@ import {
 
 const $ = (id) => document.getElementById(id);
 
+const INACTIVIDAD_MS = 30 * 60 * 1000; // 30 min sin actividad → cerrar sesión
+
 let appIniciada = false;
 let temporizadorBahias = null;
+let temporizadorInactividad = null;
 
 // ------------------------------------------------------------
 // Render coordinado
@@ -79,7 +82,13 @@ function conectarLogin() {
   const inputPassword = $('login-password');
   const boton = $('btn-ingresar');
 
-  if (MODO_DEMO) $('login-ayuda').hidden = false;
+  if (MODO_DEMO) {
+    // La pista de credenciales se inyecta SOLO en demo (textContent, sin HTML),
+    // para no exponerlas en el HTML servido en producción.
+    const ayuda = $('login-ayuda');
+    ayuda.textContent = `Modo demo — usa ${DEMO_CREDENCIALES.email} / ${DEMO_CREDENCIALES.password}`;
+    ayuda.hidden = false;
+  }
 
   formulario.addEventListener('submit', async (evento) => {
     evento.preventDefault();
@@ -151,6 +160,8 @@ async function iniciarApp(email) {
     { id: 'metricas', hash: '#/metricas' },
     { id: 'agenda', hash: '#/agenda' },
   ]);
+
+  reiniciarInactividad(); // arranca el reloj de cierre por inactividad
 }
 
 function conectarFiltros() {
@@ -167,15 +178,39 @@ function conectarFiltros() {
   );
 }
 
+/** Corta timers y realtime, cierra sesión y recarga (estado en cero). */
+async function salir() {
+  detenerTiempoReal();
+  detenerSecciones(); // corta realtime/timers de Bandeja y demás secciones
+  if (temporizadorBahias) clearInterval(temporizadorBahias);
+  if (temporizadorInactividad) clearTimeout(temporizadorInactividad);
+  await auth.cerrarSesion();
+  window.location.reload();
+}
+
 function conectarSalir() {
-  $('btn-salir').addEventListener('click', async () => {
-    detenerTiempoReal();
-    detenerSecciones(); // corta realtime/timers de Bandeja y demás secciones
-    if (temporizadorBahias) clearInterval(temporizadorBahias);
-    await auth.cerrarSesion();
-    // Recarga limpia: garantiza que no quede estado en memoria.
-    window.location.reload();
-  });
+  $('btn-salir').addEventListener('click', salir);
+}
+
+// ------------------------------------------------------------
+// Cierre por inactividad (panel con PII: no dejar sesión viva)
+// ------------------------------------------------------------
+function reiniciarInactividad() {
+  if (!appIniciada) return;
+  if (temporizadorInactividad) clearTimeout(temporizadorInactividad);
+  temporizadorInactividad = setTimeout(cerrarPorInactividad, INACTIVIDAD_MS);
+}
+
+async function cerrarPorInactividad() {
+  toast('Sesión cerrada por inactividad. Vuelve a ingresar.', 'info');
+  await new Promise((r) => setTimeout(r, 1200)); // que se alcance a leer el toast
+  salir();
+}
+
+function conectarInactividad() {
+  ['click', 'keydown', 'pointerdown', 'scroll'].forEach((ev) =>
+    window.addEventListener(ev, reiniciarInactividad, { passive: true })
+  );
 }
 
 function conectarResize() {
@@ -202,6 +237,7 @@ async function arrancar() {
   conectarAcciones();
   conectarSalir();
   conectarResize();
+  conectarInactividad();
 
   // En modo real, si la sesión muere (token revocado), volver al login.
   auth.alCambiarSesion((sesion) => {

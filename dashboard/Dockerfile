@@ -3,7 +3,9 @@
 # Sin build: HTML + CSS + JS vanilla se copian tal cual.
 # ============================================================
 
-FROM nginx:alpine
+# Versión pineada (no `nginx:alpine` flotante): builds reproducibles y CVEs
+# escaneables contra una versión conocida.
+FROM nginx:1.27-alpine
 
 # Configuración con cabeceras de seguridad y gzip
 COPY nginx.conf /etc/nginx/conf.d/default.conf
