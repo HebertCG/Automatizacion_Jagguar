@@ -17,8 +17,10 @@ import {
 } from './data.js';
 import { toast } from '../ui.js';
 
-// E.164: '+' seguido de 8 a 15 dígitos, el primero distinto de 0.
-const REGEX_E164 = /^\+[1-9]\d{7,14}$/;
+// La BD guarda el teléfono como wa_id de WhatsApp, SIN '+' (ej. '51989453142').
+// Por eso NUNCA lo reescribimos antes de mandarlo al backend: se pasa TAL CUAL
+// para que el lookup de customers.phone haga match. El '+' es opcional al validar.
+const REGEX_TEL = /^\+?[1-9]\d{7,14}$/;
 
 /**
  * Quita caracteres de control C0 y DEL (conserva tab, salto de línea y
@@ -36,11 +38,8 @@ function limpiarTexto(s) {
   return out.trim();
 }
 
-/** '+51 987 654 321' → '+51987654321'. */
-function aE164(tel) {
-  const limpio = String(tel ?? '').replace(/[^\d+]/g, '');
-  return limpio.startsWith('+') ? limpio : `+${limpio}`;
-}
+/** Deja solo dígitos y un '+' inicial. SOLO para validar, no para enviar. */
+const limpiarTel = (tel) => String(tel ?? '').replace(/[^\d+]/g, '');
 
 function mensajeErrorEnvio(err) {
   const txt = String(err?.message ?? err ?? '');
@@ -75,7 +74,7 @@ export async function alternarBot(chat) {
     if (!MODO_DEMO) {
       const supabase = await obtenerCliente();
       const { error } = await supabase.rpc('staff_set_handoff', {
-        p_phone: aE164(chat.telefono),
+        p_phone: chat.telefono, // TAL CUAL está en customers.phone (sin tocar)
         p_activo: nuevoHandoff,
       });
       if (error) throw error;
@@ -105,8 +104,7 @@ export async function enviarMensaje(chat, textoCrudo) {
     toast(`El mensaje supera los ${MENSAJE_MAX_LARGO} caracteres.`, 'error');
     return { ok: false };
   }
-  const telE164 = aE164(chat.telefono);
-  if (!REGEX_E164.test(telE164)) {
+  if (!REGEX_TEL.test(limpiarTel(chat.telefono))) {
     toast('El número del cliente no es válido para enviar por WhatsApp.', 'error');
     return { ok: false };
   }
@@ -120,7 +118,7 @@ export async function enviarMensaje(chat, textoCrudo) {
     } else {
       const supabase = await obtenerCliente();
       const { error } = await supabase.functions.invoke(FUNCION_ENVIAR_MENSAJE, {
-        body: { phone: telE164, text: texto },
+        body: { phone: chat.telefono, text: texto }, // tal cual de la BD
       });
       if (error) throw error;
       // El eco de Realtime (mensaje_staff → conversations) reemplazará esta
