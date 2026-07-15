@@ -156,9 +156,9 @@ async function iniciarApp(email) {
   iniciarRouter([
     { id: 'citas', hash: '#/citas' },
     { id: 'bandeja', hash: '#/bandeja', cargar: () => import('./bandeja/index.js') },
-    { id: 'clientes', hash: '#/clientes' },
-    { id: 'metricas', hash: '#/metricas' },
-    { id: 'agenda', hash: '#/agenda' },
+    { id: 'clientes', hash: '#/clientes', cargar: () => import('./clientes/index.js') },
+    { id: 'metricas', hash: '#/metricas', cargar: () => import('./metricas/index.js') },
+    { id: 'agenda', hash: '#/agenda', cargar: () => import('./agenda/index.js') },
   ]);
 
   reiniciarInactividad(); // arranca el reloj de cierre por inactividad

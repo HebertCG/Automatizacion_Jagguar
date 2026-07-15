@@ -20,6 +20,9 @@
   <link rel="stylesheet" href="css/responsive.css" />
   <link rel="stylesheet" href="css/nav.css" />
   <link rel="stylesheet" href="css/bandeja.css" />
+  <link rel="stylesheet" href="css/clientes.css" />
+  <link rel="stylesheet" href="css/metricas.css" />
+  <link rel="stylesheet" href="css/agenda.css" />
 
   <script type="module" src="js/app.js"></script>
 </head>
@@ -259,31 +262,84 @@
         </div>
       </section>
 
-      <!-- ===================== CLIENTES (Fase 2) ===================== -->
+      <!-- ===================== CLIENTES ===================== -->
       <section class="seccion" id="seccion-clientes" hidden aria-label="Clientes">
-        <div class="seccion-placeholder">
-          <p class="seccion-placeholder-icono" aria-hidden="true">👥</p>
-          <h2>Clientes</h2>
-          <p>El directorio de clientes llega en la próxima etapa.</p>
+        <div class="panel vidrio borde-degradado">
+          <header class="clientes-cabecera">
+            <h2 id="titulo-clientes">Clientes</h2>
+            <div class="buscador">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="m13.5 13.5 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <input id="clientes-buscador" type="search" placeholder="Buscar por nombre, teléfono o DNI…" aria-label="Buscar cliente" autocomplete="off" />
+            </div>
+          </header>
+          <div id="clientes-resumen" class="clientes-resumen"></div>
+          <div id="clientes-filtros" class="chips" role="group" aria-label="Filtrar clientes"></div>
+          <div class="tabla-envoltura">
+            <table class="tabla-citas tabla-clientes">
+              <thead><tr>
+                <th scope="col">Cliente</th><th scope="col">DNI</th><th scope="col" class="num">Msjs</th>
+                <th scope="col" class="num">Reservas</th><th scope="col" class="num">Confirm.</th>
+                <th scope="col" class="num">Compl.</th><th scope="col" class="num">Gasto</th>
+                <th scope="col">Última visita</th><th scope="col">Etiquetas</th>
+              </tr></thead>
+              <tbody id="clientes-cuerpo"></tbody>
+            </table>
+          </div>
+          <div id="clientes-cards" class="clientes-cards"></div>
+          <div id="clientes-vacio" class="estado-vacio" hidden><p class="estado-vacio-icono" aria-hidden="true">🔎</p><p>No hay clientes que coincidan.</p></div>
         </div>
+
+        <!-- Drawer de ficha -->
+        <div id="cliente-drawer-fondo" class="drawer-fondo" hidden></div>
+        <aside id="cliente-drawer" class="cliente-drawer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Ficha de cliente">
+          <button id="cliente-drawer-cerrar" class="drawer-cerrar" type="button" aria-label="Cerrar ficha">✕</button>
+          <div id="cliente-drawer-cuerpo" class="cliente-drawer-cuerpo"></div>
+        </aside>
       </section>
 
-      <!-- ===================== MÉTRICAS (Fase 3) ===================== -->
+      <!-- ===================== MÉTRICAS ===================== -->
       <section class="seccion" id="seccion-metricas" hidden aria-label="Métricas">
-        <div class="seccion-placeholder">
-          <p class="seccion-placeholder-icono" aria-hidden="true">📈</p>
-          <h2>Métricas</h2>
-          <p>El embudo de conversión y los gráficos llegan en la próxima etapa.</p>
+        <div id="metrica-kpis" class="metrica-kpis"></div>
+        <div class="metrica-grid">
+          <section class="panel vidrio borde-degradado">
+            <h2>Embudo de conversión</h2>
+            <canvas id="metrica-embudo" role="img" aria-label="Embudo de conversión"></canvas>
+          </section>
+          <section class="panel vidrio borde-degradado">
+            <h2>Actividad por día
+              <span class="metrica-leyenda"><em class="ln ln-conv"></em>Conversaciones <em class="ln ln-citas"></em>Citas</span>
+            </h2>
+            <canvas id="metrica-serie" role="img" aria-label="Conversaciones vs citas por día"></canvas>
+          </section>
+          <section class="panel vidrio borde-degradado">
+            <h2>Ingresos por servicio</h2>
+            <ul id="metrica-servicios" class="metrica-servicios"></ul>
+          </section>
+          <section class="panel vidrio borde-degradado">
+            <h2>Top clientes por gasto</h2>
+            <ol id="metrica-ranking" class="metrica-ranking"></ol>
+          </section>
         </div>
       </section>
 
-      <!-- ===================== AGENDA (Fase 4) ===================== -->
+      <!-- ===================== AGENDA ===================== -->
       <section class="seccion" id="seccion-agenda" hidden aria-label="Agenda">
-        <div class="seccion-placeholder">
-          <p class="seccion-placeholder-icono" aria-hidden="true">🗓️</p>
-          <h2>Agenda</h2>
-          <p>La vista semanal tipo calendario llega en la próxima etapa.</p>
+        <div class="panel vidrio borde-degradado agenda-panel">
+          <header class="agenda-nav" id="agenda-nav">
+            <div class="agenda-nav-fechas">
+              <button type="button" class="btn-fantasma ag-nav-btn" data-nav="prev" aria-label="Anterior">‹</button>
+              <button type="button" class="btn-fantasma" data-nav="hoy">Hoy</button>
+              <button type="button" class="btn-fantasma ag-nav-btn" data-nav="next" aria-label="Siguiente">›</button>
+              <strong id="agenda-rango" class="agenda-rango"></strong>
+            </div>
+            <div class="agenda-vista-toggle" role="group" aria-label="Vista de agenda">
+              <button type="button" data-vista="semana" class="activo">Semana</button>
+              <button type="button" data-vista="dia">Día</button>
+            </div>
+          </header>
+          <div id="agenda-vista" class="agenda-vista"></div>
         </div>
+        <div id="agenda-pop" class="agenda-pop" hidden role="dialog" aria-label="Detalle de cita"></div>
       </section>
     </main>
   </div>

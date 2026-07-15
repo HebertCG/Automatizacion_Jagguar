@@ -1,0 +1,122 @@
+/* ============================================================
+   Jaguar Carwash — Agenda: semana tipo Google Calendar + vista día.
+   Solo variables de tokens.css. Bloques coloreados por estado (--c).
+   ============================================================ */
+
+.agenda-panel { padding: 1rem 1.1rem; }
+
+.agenda-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--esp-3);
+}
+.agenda-nav-fechas { display: flex; align-items: center; gap: 0.4rem; }
+.ag-nav-btn { padding: 0.3rem 0.7rem; font-size: 1.1rem; line-height: 1; }
+.agenda-rango {
+  font-family: var(--fuente-titulo);
+  font-size: var(--texto-lg);
+  margin-left: 0.4rem;
+  text-transform: capitalize;
+}
+.agenda-vista-toggle { display: inline-flex; border: 1px solid var(--borde-fuerte); border-radius: var(--radio-pill); overflow: hidden; }
+.agenda-vista-toggle button {
+  padding: 0.35rem 0.9rem; font-size: var(--texto-sm); font-weight: 600;
+  color: var(--tinta-suave); background: var(--superficie-alta);
+}
+.agenda-vista-toggle button.activo { background: var(--grad-primario); color: #fff; }
+
+/* Scroll horizontal si la semana no cabe */
+.agenda-vista { overflow-x: auto; }
+
+/* --- Grid base (gutter + 6 días) ---------------------------- */
+.ag-grid { display: grid; grid-template-columns: 48px repeat(6, minmax(76px, 1fr)); min-width: 560px; }
+
+.ag-esquina { border-bottom: 1px solid var(--borde); }
+
+.ag-dia-cabecera {
+  padding: 0.4rem 0.3rem 0.5rem;
+  border-bottom: 1px solid var(--borde);
+  border-left: 1px solid var(--borde);
+  display: flex; flex-direction: column; align-items: center; gap: 0.15rem;
+}
+.ag-dia-cabecera.hoy { background: var(--tinte-confirmada); }
+.ag-dia-nombre { font-size: var(--texto-xs); text-transform: uppercase; letter-spacing: 0.04em; color: var(--tinta-tenue); font-weight: 700; }
+.ag-dia-fecha { font-family: var(--fuente-titulo); font-weight: 700; font-size: var(--texto-sm); }
+.ag-ocupacion { width: 80%; height: 4px; border-radius: var(--radio-pill); background: rgba(14,27,44,0.1); overflow: hidden; margin-top: 0.15rem; }
+.ag-ocupacion-barra { display: block; height: 100%; background: var(--grad-primario); }
+.ag-ocupacion-txt { font-size: 0.6rem; color: var(--tinta-tenue); }
+
+/* --- Franja "Todo el día" ----------------------------------- */
+.ag-allday { border-bottom: 1px solid var(--borde-fuerte); }
+.ag-allday-lbl { font-size: 0.6rem; color: var(--tinta-tenue); display: grid; place-items: center; text-align: center; }
+.ag-allday-col { border-left: 1px solid var(--borde); padding: 2px; display: flex; flex-direction: column; gap: 2px; min-height: 24px; }
+.ag-allday-bloque {
+  font-size: 0.62rem; font-weight: 600; text-align: left;
+  padding: 0.15rem 0.35rem; border-radius: 5px; color: var(--tinta);
+  border-left: 3px solid var(--c);
+  background: color-mix(in srgb, var(--c) 18%, white);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* --- Cuerpo con horas --------------------------------------- */
+.ag-cuerpo { position: relative; }
+.ag-gutter { position: relative; }
+.ag-hora-label {
+  position: absolute; right: 4px; transform: translateY(-50%);
+  font-size: 0.6rem; color: var(--tinta-tenue);
+}
+.ag-col {
+  position: relative; border-left: 1px solid var(--borde);
+}
+.ag-linea { position: absolute; left: 0; right: 0; height: 1px; background: var(--borde); }
+
+.ag-bloque {
+  position: absolute; left: 2px; right: 2px;
+  padding: 0.2rem 0.35rem; border-radius: 6px; overflow: hidden;
+  text-align: left; color: var(--tinta);
+  border-left: 3px solid var(--c);
+  background: color-mix(in srgb, var(--c) 16%, white);
+  box-shadow: var(--sombra-1);
+  display: flex; flex-direction: column; gap: 1px;
+  transition: transform var(--dur-rapida) var(--ease-out), box-shadow var(--dur-rapida);
+}
+.ag-bloque:hover { transform: scale(1.02); box-shadow: var(--sombra-2); z-index: 2; }
+.ag-bloque-hora { font-size: 0.6rem; font-weight: 700; color: color-mix(in srgb, var(--c) 70%, black); }
+.ag-bloque-cli { font-size: 0.68rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ag-bloque-serv { font-size: 0.6rem; color: var(--tinta-suave); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ag-bloque.compacto { flex-direction: row; align-items: center; gap: 4px; padding: 0.1rem 0.35rem; }
+.ag-bloque.compacto .ag-bloque-serv { display: none; }
+
+/* --- Vista día ---------------------------------------------- */
+.ag-cuerpo.dia { grid-template-columns: 48px 1fr; min-width: 0; }
+.ag-dia-cabecera.grande {
+  flex-direction: row; justify-content: space-between; border-left: none;
+  padding: 0.5rem 0.2rem;
+}
+.ag-dia-cabecera.grande .ag-dia-nombre { font-size: var(--texto-base); color: var(--tinta); text-transform: capitalize; }
+.ag-allday-dia { display: flex; flex-wrap: wrap; gap: 4px; padding: 0.4rem 0; border-bottom: 1px solid var(--borde); margin-bottom: 0.3rem; }
+
+/* --- Popover de detalle ------------------------------------- */
+.agenda-pop {
+  position: fixed; z-index: 60;
+  width: min(300px, calc(100vw - 24px));
+  padding: 0.9rem 1rem;
+  border-radius: var(--radio-asim-sm);
+  background: var(--superficie-solida);
+  border: 1px solid var(--borde-fuerte);
+  box-shadow: var(--sombra-2);
+}
+.ag-pop-cerrar { position: absolute; top: 0.5rem; right: 0.5rem; color: var(--tinta-tenue); font-size: 0.9rem; }
+.ag-pop-hora { font-size: var(--texto-xs); color: var(--tinta-tenue); margin-bottom: 0.3rem; }
+.ag-pop-cli { font-size: var(--texto-base); }
+.ag-pop-meta { font-size: var(--texto-sm); color: var(--tinta-suave); margin-top: 0.2rem; }
+.ag-pop-notas { font-size: var(--texto-xs); color: var(--tinta-tenue); font-style: italic; margin-top: 0.3rem; }
+.ag-pop-acciones { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.7rem; }
+
+@media (max-width: 767px) {
+  .agenda-nav { gap: var(--esp-2); }
+  .agenda-rango { font-size: var(--texto-base); }
+}

@@ -1,0 +1,82 @@
+/* ============================================================
+   Jaguar Carwash — Métricas: KPIs + gráficos canvas + rankings.
+   Solo variables de tokens.css. Reutiliza .kpi / .panel.
+   ============================================================ */
+
+.metrica-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--esp-4);
+  margin-bottom: var(--esp-seccion);
+}
+.metrica-kpis .kpi { padding: 1.1rem 1.3rem; }
+
+.metrica-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--esp-4);
+  align-items: start;
+}
+.metrica-grid > * { min-width: 0; }
+.metrica-grid h2 {
+  font-size: var(--texto-lg);
+  margin-bottom: var(--esp-3);
+  display: flex;
+  align-items: center;
+  gap: var(--esp-3);
+  flex-wrap: wrap;
+}
+
+#metrica-embudo { width: 100%; height: 290px; }
+#metrica-serie { width: 100%; height: 210px; }
+
+/* Leyenda de la serie */
+.metrica-leyenda {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--texto-xs);
+  font-weight: 500;
+  color: var(--tinta-tenue);
+}
+.metrica-leyenda .ln { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.ln-conv { background: #0077B6; }
+.ln-citas { background: #F5A300; }
+
+/* Ingresos por servicio (barras) */
+.metrica-servicios { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--esp-3); }
+.srv-top { display: flex; justify-content: space-between; align-items: baseline; font-size: var(--texto-sm); }
+.srv-top strong { font-family: var(--fuente-titulo); }
+.srv-barra {
+  height: 8px; border-radius: var(--radio-pill);
+  background: rgba(14, 27, 44, 0.08); overflow: hidden; margin: 0.25rem 0;
+}
+.srv-barra span { display: block; height: 100%; border-radius: inherit; background: var(--grad-primario); }
+.srv-meta { font-size: var(--texto-xs); color: var(--tinta-tenue); }
+.srv-vacio { color: var(--tinta-tenue); font-size: var(--texto-sm); }
+
+/* Ranking de clientes */
+.metrica-ranking { list-style: none; padding: 0; counter-reset: rk; display: flex; flex-direction: column; gap: 0.4rem; }
+.metrica-ranking li {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.5rem 0.6rem; border-radius: var(--radio-asim-sm);
+  background: var(--superficie-alta);
+}
+.rk-pos {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  display: grid; place-items: center;
+  background: var(--grad-primario); color: #fff;
+  font-family: var(--fuente-titulo); font-weight: 700; font-size: 0.8rem;
+}
+.rk-nombre { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rk-gasto { font-family: var(--fuente-titulo); font-weight: 700; color: var(--verde); }
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .metrica-grid { grid-template-columns: minmax(0, 1fr); }
+  .metrica-kpis { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .metrica-kpis { grid-template-columns: repeat(2, 1fr); gap: var(--esp-3); }
+}

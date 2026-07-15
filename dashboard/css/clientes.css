@@ -1,0 +1,173 @@
+/* ============================================================
+   Jaguar Carwash — Clientes: directorio + drawer de ficha.
+   Solo variables de tokens.css. Reutiliza .tabla-citas / .chip / .badge.
+   ============================================================ */
+
+.clientes-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--esp-3);
+}
+
+/* --- Resumen (KPI chips) ------------------------------------ */
+.clientes-resumen {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--esp-3);
+  margin-bottom: var(--esp-4);
+}
+.cli-kpi {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radio-asim-sm);
+  border: 1px solid var(--borde);
+  background: var(--superficie-alta);
+}
+.cli-kpi-icono { font-size: 1.3rem; }
+.cli-kpi strong {
+  display: block;
+  font-family: var(--fuente-titulo);
+  font-size: 1.2rem;
+  line-height: 1.1;
+}
+.cli-kpi span { font-size: var(--texto-xs); color: var(--tinta-tenue); }
+
+/* --- Tabla -------------------------------------------------- */
+.tabla-clientes td,
+.tabla-clientes th { white-space: nowrap; }
+.tabla-clientes .num { text-align: right; font-variant-numeric: tabular-nums; }
+.tabla-clientes tbody tr { cursor: pointer; }
+.cli-celda-nombre { display: flex; align-items: center; gap: 0.55rem; }
+.cli-celda-nombre strong { display: block; }
+.cli-tel { font-size: var(--texto-xs); color: var(--tinta-tenue); }
+
+.chat-avatar.chico { width: 34px; height: 34px; font-size: 0.72rem; }
+
+/* --- Etiquetas (pills) -------------------------------------- */
+.tag-pills { display: inline-flex; gap: 0.3rem; flex-wrap: wrap; }
+.tag-pill {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radio-pill);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--tag, var(--gris-estado));
+}
+
+/* --- Cards (móvil) ------------------------------------------ */
+.clientes-cards { display: none; flex-direction: column; gap: var(--esp-3); }
+.cli-card {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radio-asim-sm);
+  border: 1px solid var(--borde);
+  background: var(--superficie-alta);
+  cursor: pointer;
+}
+.cli-card header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+.cli-card-id { flex: 1; min-width: 0; }
+.cli-card-id strong { display: block; }
+.cli-card-gasto { font-family: var(--fuente-titulo); font-weight: 700; color: var(--verde); }
+.cli-card-stats {
+  display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem;
+  font-size: var(--texto-sm); color: var(--tinta-suave); margin-bottom: 0.4rem;
+}
+
+/* --- Drawer de ficha ---------------------------------------- */
+.drawer-fondo {
+  position: fixed; inset: 0; z-index: 55;
+  background: rgba(14, 27, 44, 0.35);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+}
+.cliente-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 56;
+  width: min(460px, 100%);
+  background: var(--superficie-solida);
+  border-left: 1px solid var(--borde-fuerte);
+  box-shadow: var(--sombra-2);
+  transform: translateX(100%);
+  transition: transform var(--dur-normal) var(--ease-out);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.cliente-drawer.abierto { transform: translateX(0); }
+.drawer-cerrar {
+  position: absolute; top: 0.7rem; right: 0.7rem; z-index: 1;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--superficie-alta); border: 1px solid var(--borde);
+  font-size: 1rem; color: var(--tinta-suave);
+}
+.drawer-cerrar:hover { border-color: var(--coral); color: var(--coral); }
+.cliente-drawer-cuerpo { padding: var(--esp-5); }
+
+.ficha-cabecera { display: flex; align-items: center; gap: 0.7rem; margin-bottom: var(--esp-4); }
+.ficha-cabecera h3 { font-size: var(--texto-lg); }
+.ficha-cabecera > div { flex: 1; min-width: 0; }
+.ficha-cabecera .btn-fantasma { flex-shrink: 0; }
+
+.ficha-kpis {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4rem;
+  margin-bottom: var(--esp-5);
+}
+.ficha-kpi {
+  text-align: center; padding: 0.5rem 0.2rem;
+  border-radius: var(--radio-asim-sm); background: var(--superficie-alta);
+  border: 1px solid var(--borde);
+}
+.ficha-kpi strong { display: block; font-family: var(--fuente-titulo); font-size: 1rem; }
+.ficha-kpi span { font-size: 0.62rem; color: var(--tinta-tenue); }
+
+.ficha-bloque { margin-bottom: var(--esp-5); }
+.ficha-bloque h4 {
+  font-size: var(--texto-sm); color: var(--tinta-suave);
+  text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--esp-2);
+}
+
+.tag-toggles { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tag-toggle {
+  padding: 0.3rem 0.7rem; border-radius: var(--radio-pill);
+  border: 1.5px solid var(--tag, var(--borde-fuerte));
+  color: var(--tag, var(--tinta-suave));
+  font-size: var(--texto-xs); font-weight: 600; background: transparent;
+  transition: background var(--dur-rapida), color var(--dur-rapida);
+}
+.tag-toggle.on { background: var(--tag); color: #fff; }
+
+.ficha-citas, .ficha-notas { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.ficha-citas li {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.4rem 0.6rem; border-radius: var(--radio-asim-sm);
+  background: var(--superficie-alta); font-size: var(--texto-sm);
+}
+.ficha-citas li .num { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 600; }
+.ficha-notas li {
+  padding: 0.55rem 0.7rem; border-radius: var(--radio-asim-sm);
+  background: var(--tinte-confirmada);
+}
+.ficha-notas li p { font-size: var(--texto-sm); }
+.ficha-nota-meta { font-size: 0.65rem; color: var(--tinta-tenue); }
+.ficha-nota-form { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: var(--esp-3); }
+.ficha-nota-form textarea {
+  resize: vertical; min-height: 48px; padding: 0.6rem 0.8rem;
+  border: 1px solid var(--borde-fuerte); border-radius: var(--radio-asim-sm);
+  background: var(--superficie-alta); font-family: var(--fuente-texto);
+}
+.ficha-nota-form textarea:focus { outline: none; border-color: var(--cian); box-shadow: 0 0 0 3px rgba(0,180,216,0.16); }
+.btn-nota { width: auto; align-self: flex-start; padding: 0.5rem 1rem; }
+.ficha-vacio { font-size: var(--texto-sm); color: var(--tinta-tenue); }
+
+/* --- Responsive --------------------------------------------- */
+@media (max-width: 900px) {
+  .clientes-resumen { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .tabla-clientes { display: none; }
+  .clientes-cards { display: flex; }
+  .ficha-kpis { grid-template-columns: repeat(3, 1fr); }
+  .cliente-drawer { width: 100%; }
+}

@@ -26,6 +26,15 @@ export const VISTA_BANDEJA = 'v_bandeja';          // 1 fila por cliente (últim
 export const TABLA_CONVERSACIONES = 'conversations'; // mensajes (realtime)
 export const TABLA_CLIENTES = 'customers';          // clientes (handoff)
 export const FUNCION_ENVIAR_MENSAJE = 'enviar-mensaje-staff'; // Edge Function
+// Clientes / Métricas / Agenda: TODO agregado en vistas → 1 consulta por sección.
+export const VISTA_CLIENTES = 'v_clientes';
+export const TABLA_NOTAS = 'customer_notes';
+export const TABLA_TAGS = 'customer_tags';
+export const FUNCION_FICHA = 'ficha_cliente';
+export const VISTA_EMBUDO = 'v_embudo';
+export const VISTA_METRICAS_DIARIAS = 'v_metricas_diarias';
+export const VISTA_INGRESOS_SERVICIO = 'v_ingresos_por_servicio';
+export const VISTA_RANKING_CLIENTES = 'v_ranking_clientes';
 
 // --- Credenciales aceptadas en modo demo ----------------------
 export const DEMO_CREDENCIALES = Object.freeze({
@@ -143,4 +152,31 @@ export const ROLES_CHAT = Object.freeze({
   cliente: { etiqueta: 'Cliente', lado: 'izquierda', clase: 'entrante', mini: '' },
   bot: { etiqueta: 'Bot', lado: 'derecha', clase: 'saliente', mini: '🤖 Bot' },
   staff: { etiqueta: 'Tú', lado: 'derecha', clase: 'saliente', mini: '👤 Tú' },
+});
+
+// ============================================================
+// Clientes — catálogo de etiquetas (espeja el seed de la migración 18;
+// se guarda en el front para colorear sin una consulta extra).
+// ============================================================
+export const TAGS_CATALOGO = Object.freeze({
+  vip: { label: 'VIP', color: '#F5A300' },
+  frecuente: { label: 'Frecuente', color: '#19A97B' },
+  ceramico: { label: 'Cerámico', color: '#0077B6' },
+  moroso: { label: 'Moroso', color: '#F45B69' },
+  dormido: { label: 'Dormido', color: '#8A99AB' },
+});
+export const CLIENTE_DORMIDO_DIAS = 30; // sin visita hace +30 días
+
+// ============================================================
+// Métricas — colores de los gráficos canvas (no leen tokens CSS).
+// ============================================================
+export const COLORES_METRICA = Object.freeze({
+  escribieron: '#8A99AB',
+  conversaron: '#F5A300',
+  agendaron: '#0077B6',
+  confirmaron: '#E8960C',
+  completaron: '#19A97B',
+  conversaciones: '#0077B6',
+  citas: '#F5A300',
+  ingresos: '#19A97B',
 });
