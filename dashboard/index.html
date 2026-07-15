@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#F5F8FC" />
   <title>Jaguar Carwash — Panel del staff</title>
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M17 2h21a8 8 0 0 1 8 8v21a15 15 0 0 1-15 15H10a8 8 0 0 1-8-8V17A15 15 0 0 1 17 2Z' fill='%2300B4D8'/%3E%3Ctext x='24' y='31' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='17' fill='white'%3EJC%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/jpeg" href="img/logo.jpg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,22 +29,6 @@
 <body>
   <div class="fondo-malla" aria-hidden="true"></div>
 
-  <!-- Logo reutilizable -->
-  <svg width="0" height="0" class="svg-defs" aria-hidden="true" focusable="false">
-    <defs>
-      <linearGradient id="grad-logo" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#00B4D8" />
-        <stop offset="1" stop-color="#0077B6" />
-      </linearGradient>
-      <symbol id="logo-jaguar" viewBox="0 0 48 48">
-        <path d="M17 2h21a8 8 0 0 1 8 8v21a15 15 0 0 1-15 15H10a8 8 0 0 1-8-8V17A15 15 0 0 1 17 2Z" fill="url(#grad-logo)" />
-        <path d="M14 12l4 5M34 12l-4 5" stroke="rgba(255,255,255,.5)" stroke-width="2.4" stroke-linecap="round" />
-        <text x="24" y="32" text-anchor="middle" font-family="'Space Grotesk',Arial,sans-serif" font-weight="700" font-size="16" fill="#fff">JC</text>
-        <circle cx="39" cy="39" r="3" fill="#B8F135" />
-      </symbol>
-    </defs>
-  </svg>
-
   <noscript>
     <p class="aviso-noscript">El panel de Jaguar Carwash necesita JavaScript para funcionar.</p>
   </noscript>
@@ -53,7 +37,7 @@
   <section id="pantalla-login" class="pantalla-login" aria-labelledby="login-titulo">
     <div class="login-tarjeta vidrio borde-degradado anim-entrada">
       <div class="marca">
-        <svg class="marca-logo" aria-hidden="true"><use href="#logo-jaguar" /></svg>
+        <img class="marca-logo" src="img/logo.jpg" alt="Jaguar Car Detailing" width="40" height="40" />
         <div class="marca-texto">
           <span class="marca-nombre">Jaguar Carwash</span>
           <span class="marca-sub">Panel del staff</span>
@@ -86,7 +70,7 @@
   <div id="app" hidden>
     <header class="cabecera vidrio">
       <div class="marca">
-        <svg class="marca-logo" aria-hidden="true"><use href="#logo-jaguar" /></svg>
+        <img class="marca-logo" src="img/logo.jpg" alt="Jaguar Car Detailing" width="40" height="40" />
         <div class="marca-texto">
           <span class="marca-nombre">Jaguar Carwash</span>
           <span class="marca-sub">Panel del staff</span>
