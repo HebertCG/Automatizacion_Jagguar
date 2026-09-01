@@ -19,7 +19,6 @@ quieras.
 
 | | |
 |---|---|
-| **URL** | `https://<tu-proyecto>.vercel.app` |
 | **Usuario** | `staff@jaguar.pe` |
 | **Contraseña** | `demo123` |
 
