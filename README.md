@@ -1,4 +1,4 @@
-# 🐆 Automatización Jaguar Car Detailing
+#  Automatización Jaguar Car Detailing
 
 Sistema de atención y agendamiento por **WhatsApp** para un car detailing en Piura,
 Perú. Un bot con IA (**n8n + OpenAI**) atiende, cotiza y agenda solo; el staff
