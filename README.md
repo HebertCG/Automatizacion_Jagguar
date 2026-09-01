@@ -8,6 +8,7 @@ supervisa todo desde un **panel web** que vive en este repositorio.
 > SQL (migraciones, policies RLS, Edge Function) corren fuera del navegador y
 > **no se versionan aquí**: se documentan, pero el código de base de datos se
 > mantiene en privado.
+<img width="1140" height="285" alt="image" src="https://github.com/user-attachments/assets/d2bb15f8-078b-4a03-919d-2172a50df649" />
 
 ---
 
