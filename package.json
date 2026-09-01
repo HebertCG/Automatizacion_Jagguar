@@ -1,0 +1,28 @@
+{
+  "name": "automatizacion-jaguar",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Automatizacion de WhatsApp (n8n + Supabase) y panel del staff de Jaguar Car Detailing. Sitio estatico sin build: HTML + CSS + JS vanilla con modulos ES.",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HebertCG/Automatizacion_Jagguar.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "npx --yes serve dashboard --listen 8080",
+    "start": "npm run dev",
+    "docker": "docker compose up --build",
+    "deploy": "npx --yes vercel deploy --prod"
+  },
+  "keywords": [
+    "whatsapp",
+    "n8n",
+    "supabase",
+    "carwash",
+    "crm",
+    "automatizacion"
+  ]
+}

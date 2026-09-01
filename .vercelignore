@@ -1,0 +1,24 @@
+# ============================================================
+# Archivos que NO se suben a Vercel.
+#
+# Importante: todo lo que quede dentro de `dashboard/` (el
+# outputDirectory) se publica como archivo estatico y seria
+# legible desde internet. Por eso se excluyen aqui la config de
+# nginx y el Dockerfile: solo sirven para el despliegue en VPS.
+# ============================================================
+
+# Backend / infraestructura (no se sirve como estatico)
+supabase/
+docker-compose.yml
+dashboard/Dockerfile
+dashboard/.dockerignore
+dashboard/nginx.conf
+
+# Documentacion
+*.md
+
+# Git y editores
+.git/
+.github/
+.vscode/
+.idea/
