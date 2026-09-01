@@ -15,3 +15,9 @@ tmp/
 
 # Temporales del CLI de Supabase
 supabase/.temp/
+
+# Backend de Supabase: NO se versiona.
+# Migraciones (esquema, policies RLS, cuerpos de las funciones) y el codigo
+# de la Edge Function se mantienen fuera del repo publico. Guardalos en un
+# backup privado: al no estar en git, este arbol de trabajo es la unica copia.
+supabase/

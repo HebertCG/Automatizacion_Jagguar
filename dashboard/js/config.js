@@ -8,8 +8,27 @@
  *  true  → todo funciona con datos de muestra locales y el
  *          "tiempo real" se simula (no necesita backend).
  *  false → Supabase real: Auth + vista v_citas + Realtime + polling.
+ *
+ * Se decide POR DOMINIO para que un solo repo sirva a dos destinos:
+ *   · *.vercel.app          → DEMO. Vitrina pública: cualquiera entra con
+ *                             DEMO_CREDENCIALES y recorre el panel completo
+ *                             sin tocar ni un dato real (todas las acciones
+ *                             de escritura se quedan en el store local).
+ *   · VPS de producción y localhost → REAL.
+ *
+ * Failsafe deliberado: si el dominio NO se reconoce, cae a REAL, que exige
+ * login contra Supabase con RLS. El fallo nunca abre datos de clientes.
+ *
+ * Para probar la vitrina en local, pon MODO_FORZADO = 'demo'.
  */
-export const MODO_DEMO = false;
+const MODO_FORZADO = null; // null → decidir por dominio | 'demo' | 'real'
+
+const esDominioVitrina = () =>
+  typeof location !== 'undefined' &&
+  location.hostname.endsWith('.vercel.app');
+
+export const MODO_DEMO =
+  MODO_FORZADO === null ? esDominioVitrina() : MODO_FORZADO === 'demo';
 
 // --- Supabase (solo aplica con MODO_DEMO = false) -------------
 // Usa SIEMPRE la clave publicable (anon/publishable).

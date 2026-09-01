@@ -5,8 +5,36 @@ Perú. Un bot con IA (**n8n + OpenAI**) atiende, cotiza y agenda solo; el staff
 supervisa todo desde un **panel web** que vive en este repositorio.
 
 > **Este repo contiene el panel del staff.** Los 8 workflows de n8n y el esquema
-> SQL corren fuera del navegador (instancia de n8n + proyecto Supabase); aquí se
-> documentan y se versionan las migraciones que el panel necesita.
+> SQL (migraciones, policies RLS, Edge Function) corren fuera del navegador y
+> **no se versionan aquí**: se documentan, pero el código de base de datos se
+> mantiene en privado.
+
+---
+
+## 🔑 Entra a ver el panel
+
+El despliegue en Vercel corre en **modo demo**: datos de muestra, tiempo real
+simulado y **cero conexión con la base de datos real**. Entra y toca lo que
+quieras.
+
+| | |
+|---|---|
+| **URL** | `https://<tu-proyecto>.vercel.app` |
+| **Usuario** | `staff@jaguar.pe` |
+| **Contraseña** | `demo123` |
+
+Dentro vas a poder recorrer las 5 secciones, confirmar e iniciar lavados, mover
+citas entre estados, abrir conversaciones de WhatsApp, responder, apagar y
+encender el bot, y escribir notas y etiquetas de clientes.
+
+**Nada de eso sale del navegador.** En modo demo todas las acciones de escritura
+se quedan en el store local: no hay llamadas a Supabase, no se envían WhatsApp
+reales y ningún dato de cliente real es accesible. Las credenciales de arriba
+**solo existen en modo demo** — no son una cuenta del negocio.
+
+> El panel de producción vive en otro dominio y exige cuenta de staff real
+> contra Supabase Auth, con RLS por `es_staff()`. Esas credenciales no están
+> publicadas en ninguna parte de este repositorio.
 
 ---
 
@@ -233,9 +261,6 @@ Automatizacion_Jagguar/
 │   │   └── agenda/               # Sección Agenda (semana)
 │   ├── nginx.conf                # Cabeceras de seguridad para el VPS
 │   └── Dockerfile                # nginx:alpine
-├── supabase/
-│   ├── migrations/13..20         # Bandeja, rate limit, auditoría, authz, CRM, pagos
-│   └── functions/enviar-mensaje-staff/   # Edge Function (Deno)
 ├── vercel.json                   # Deploy estático + cabeceras de seguridad
 ├── package.json                  # Scripts de conveniencia (no hay build)
 └── docker-compose.yml            # Despliegue en VPS
@@ -262,16 +287,24 @@ cd dashboard && python -m http.server 8080
 docker compose up --build     # http://localhost:8080
 ```
 
-**Credenciales demo:** `staff@jaguar.pe` / `demo123`
+**Credenciales demo:** `staff@jaguar.pe` / `demo123` (ver [Entra a ver el panel](#-entra-a-ver-el-panel)). En local el modo por defecto es **real**; para la vitrina pon `MODO_FORZADO = 'demo'` en `config.js`.
 
-### Modo demo vs modo real
+### Modo demo vs modo real: se decide por dominio
 
-En [dashboard/js/config.js](dashboard/js/config.js):
+Un solo repositorio sirve a dos destinos. `MODO_DEMO` no se edita a mano: lo
+resuelve el dominio en [dashboard/js/config.js](dashboard/js/config.js).
 
-| Flag | Comportamiento |
-|------|----------------|
-| `MODO_DEMO = true` | Citas de muestra + eventos simulados cada ~25 s. **No requiere backend.** |
-| `MODO_DEMO = false` | Supabase real: login, vista `v_citas`, canal Realtime + polling de respaldo cada 20 s |
+| Dominio | Modo | Comportamiento |
+|---------|------|----------------|
+| `*.vercel.app` | **DEMO** | Vitrina pública. Datos de muestra + eventos simulados cada ~25 s. **Sin backend**: ninguna acción sale del navegador |
+| VPS de producción y `localhost` | **REAL** | Supabase: login con Auth, vista `v_citas`, Realtime + polling de respaldo cada 20 s |
+
+El *failsafe* es deliberado: si el dominio **no** se reconoce, cae a **modo
+real**, que exige login contra Supabase con RLS. Un fallo nunca abre datos de
+clientes; como mucho deja a alguien frente a un login que no puede pasar.
+
+Para probar la vitrina en tu máquina, pon `MODO_FORZADO = 'demo'` en
+`config.js`.
 
 > ⚠️ En `config.js` va **solo la clave publicable (anon)**, protegida por RLS.
 > **Nunca** una `service_role` key: este código corre en el navegador.
@@ -303,17 +336,17 @@ Detalles que ya están resueltos en la configuración:
   con código viejo en caché. Imágenes y fuentes sí cachean 30 días.
 - **Router por hash**: `#/citas` nunca llega al servidor, así que **no hace falta
   ninguna regla de rewrite tipo SPA** y recargar la página no da 404.
-- **[.vercelignore](.vercelignore)** excluye `nginx.conf`, el `Dockerfile` y
-  `supabase/`. Sin eso quedarían publicados como archivos estáticos legibles
-  desde internet.
+- **[.vercelignore](.vercelignore)** excluye `nginx.conf` y el `Dockerfile`: al
+  vivir dentro de `dashboard/`, si no se excluyeran quedarían publicados como
+  archivos estáticos legibles desde internet.
+- **Arranca solo en modo demo** por ser un dominio `*.vercel.app`, así que el
+  deploy público no toca la base de datos real ni necesita ninguna variable de
+  entorno.
 
-**Después del primer deploy**, apunta el CORS de la Edge Function al dominio
-nuevo, o el envío manual de WhatsApp fallará desde ese origen:
-
-```bash
-supabase secrets set CORS_ORIGIN=https://<tu-dominio>.vercel.app
-supabase functions deploy enviar-mensaje-staff
-```
+> Si le pones un **dominio propio** a este despliegue, deja de ser `*.vercel.app`
+> y pasará a **modo real**: pedirá cuenta de staff contra Supabase. Si lo que
+> quieres es que la vitrina siga siendo pública en ese dominio, añádelo a
+> `esDominioVitrina()` en `config.js`.
 
 ### 10.2 VPS con Docker + nginx
 
@@ -330,25 +363,29 @@ HTML/JS/CSS.
 
 ## 11. Supabase
 
-### Migraciones (SQL Editor, **en orden**)
+> 🔒 **El código de base de datos no está en este repositorio.** Las migraciones
+> (esquema, policies RLS, cuerpos de las funciones) y la Edge Function se
+> mantienen en privado. Abajo se describe *qué* hace cada pieza, no *cómo* está
+> escrita.
+
+### Migraciones (se aplican en orden en el SQL Editor)
 
 | Migración | Qué aporta |
 |-----------|-----------|
-| `13_conversations_realtime_rls.sql` | RLS de `conversations`, Realtime y vista `v_bandeja` |
-| `14_rate_limit.sql` | Ventana por minuto para la Edge Function |
-| `15_audit_staff_actions.sql` | Triggers de auditoría: cambio de estado y on/off del bot |
-| `16_authz_staff.sql` | 🔴 **Crítica**: tabla `staff`, `es_staff()`, RLS restrictiva, `staff_set_handoff` |
-| `17_lockdown_rpcs.sql` | Revoca los RPC del bot a los clientes del navegador |
-| `18_clientes.sql` | `v_clientes`, notas y etiquetas |
-| `19_metricas.sql` | Vistas de embudo, serie diaria, ingresos y ranking |
-| `20_pagos_vouchers.sql` | Anticipo del 20% + `payment_vouchers` con operación única |
+| 13 | RLS de `conversations`, Realtime y vista `v_bandeja` |
+| 14 | Ventana de rate limit por minuto para la Edge Function |
+| 15 | Triggers de auditoría: cambio de estado y on/off del bot |
+| 16 | 🔴 **Crítica**: tabla `staff`, `es_staff()`, RLS restrictiva y wrapper de handoff |
+| 17 | Revoca los RPC del bot a los clientes del navegador |
+| 18 | Vista de clientes, notas y etiquetas |
+| 19 | Vistas de embudo, serie diaria, ingresos y ranking |
+| 20 | Anticipo del 20% + vouchers con número de operación único |
 
-> **`16` antes o junto con el deploy del front**: el panel ya llama a
-> `staff_set_handoff` y sin la migración el toggle del bot da error.
->
-> Ajusta los emails sembrados en `16` a los reales del equipo, o habrá lockout.
-> `17` solo aplica **si el bot de n8n usa la `service_role` key** (el setup
-> estándar); con anon key, migra el bot primero.
+> **La 16 va antes o junto con el deploy del front**: el panel llama al wrapper
+> de handoff y sin la migración el toggle del bot da error. Ajusta los emails
+> sembrados a los reales del equipo o habrá lockout. La 17 solo aplica **si el
+> bot de n8n usa la `service_role` key** (el setup estándar); con anon key,
+> migra el bot primero.
 
 **Eficiencia de las vistas**: cada una agrega con CTEs (un escaneo por tabla, sin
 producto cartesiano) y el front hace **una consulta por sección**, sin polling.
@@ -367,6 +404,10 @@ producto cartesiano) y el front hace **una consulta por sección**, sin polling.
 supabase secrets set META_WA_TOKEN=... WA_PHONE_ID=... CORS_ORIGIN=https://...
 supabase functions deploy enviar-mensaje-staff
 ```
+
+`CORS_ORIGIN` debe ser el dominio del panel **real**. Si cambias ese dominio y
+no lo actualizas, el envio manual de WhatsApp falla por CORS. El deploy demo de
+Vercel no interviene aqui: nunca llama a la Edge Function.
 
 > **Gotcha del teléfono**: `customers.phone` guarda el `wa_id` **sin `+`**
 > (ej. `51989453142`). No reescribas el número al pasarlo a los RPC o el lookup
